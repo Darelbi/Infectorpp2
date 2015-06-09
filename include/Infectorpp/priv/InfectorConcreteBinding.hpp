@@ -1,17 +1,19 @@
 /*******************************************************************************
-   Copyright (C) 2014 Dario Oliveri
+   Copyright (C) 2015 Dario Oliveri
    See copyright notice in InfectorExport.hpp
 *******************************************************************************/
 #pragma once
 #include "InfectorBinding.hpp"
 
-#include <unordered_map>
+#include <unordered_map>#include <typeindex>
+
+
 namespace Infector {
 namespace priv {
 
 class ConcreteBinding: public virtual Binding {
 
-    using TypeMap = std::unordered_map< TypeIndex, TypeInfoP>;
+    using TypeMap = std::unordered_map< std::type_index, TypeInfoP>;
 
     TypeMap bindings;
 
