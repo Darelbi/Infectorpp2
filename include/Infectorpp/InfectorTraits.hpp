@@ -38,15 +38,11 @@ void isMultiBase(){
     static_assert( !std::is_base_of< Infector::Container, T>::value
                   , "Cannot Inject Infector::Container or its subclasses!");
 
-    static_assert(  sizeof...( Contracts)>0 //if no contracts don't use "As"
+    static_assert(  sizeof...( Contracts)>0 //if no contracts don't use "bind X As"
                       , " There must be at least 1 interface ");
 
     static_assert(  std::is_destructible< T>::value
                       , " T must be destructible");
-
-    /// Commented out since this is referred to default constructor only
-    /*static_assert(  std::is_constructible<T>::value
-                      , " T must be constructible");*/
 
     isMultiBaseVariadic< T, Contracts...>();
 }
@@ -64,10 +60,6 @@ void isWireable(){
 
         static_assert(  std::is_destructible<T>::value
                       , " T must be destructible");
-
-        /// Commented out since this is referred to default constructor only
-        /*static_assert(  std::is_constructible<T>::value
-                      , " T must be constructible");*/
 }
 
 } // namespace Infector
