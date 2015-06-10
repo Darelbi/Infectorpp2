@@ -1,9 +1,10 @@
 /*******************************************************************************
-   Copyright (C) 2014 Dario Oliveri
+   Copyright (C) 2015 Dario Oliveri
    See copyright notice in InfectorExport.hpp
 *******************************************************************************/
 #pragma once
 #include "InfectorTypes.hpp"
+
 
 namespace Infector {
 namespace priv {
@@ -20,7 +21,7 @@ public:
     /** Get concrete type of a class through its interface. */
     virtual TypeInfoP get( TypeInfoP interface) = 0;
 
-    /** allow calling destructor of derived classes from base pointer.*/
+    /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Binding() = default;
 };
 
