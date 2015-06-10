@@ -1,11 +1,10 @@
 /*******************************************************************************
-   Copyright (C) 2015 Dario Oliveri
+   Copyright (C) 2014 Dario Oliveri
    See copyright notice in InfectorExport.hpp
 *******************************************************************************/
 #include "InfectorConcreteBinding.hpp"
 
 #include <exception>
-
 
 namespace Infector {
 namespace priv {
@@ -19,18 +18,18 @@ void ConcreteBinding::bind( TypeInfoP concrete,
     if(get(interface)!=nullptr)
         throw std::invalid_argument("Interface already bound.\n");
 
-    bindings.insert( std::pair< std::type_index, TypeInfoP>
-                    ( std::type_index(*interface), concrete));
+    bindings.insert( std::pair< TypeIndex, TypeInfoP>
+                    ( TypeIndex(*interface), concrete));
 }
 
 void ConcreteBinding::remove( TypeInfoP interface){
-    auto it = bindings.find( std::type_index(*interface) );
+    auto it = bindings.find( TypeIndex(*interface) );
     if(it!=bindings.end())
         bindings.erase( it);
 }
 
 TypeInfoP ConcreteBinding::get( TypeInfoP interface){
-    auto it = bindings.find( std::type_index(*interface));
+    auto it = bindings.find( TypeIndex(*interface));
     return it!=bindings.end()? it->second : nullptr;
 }
 
