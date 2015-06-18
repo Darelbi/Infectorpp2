@@ -4,6 +4,7 @@
 *******************************************************************************/
 #pragma once
 #include <typeinfo>
+#include <memory>
 
 
 namespace Infector {
@@ -18,9 +19,12 @@ namespace priv {
         Interface * interface = static_cast<Interface*>(implem); //trivial cast
         return static_cast<void *>(interface); //now to void*
     }
+	
+	class Context;
 
     /** Nicer to look at than "returnType(*)(Args)" function pointer */
-    using UpcastSignature  = void*(*)(void*);
+    using UpcastSignature	= void*(*)(void*);
+	using BuildSignature	= void* (*)( priv::Context* ctx);
 
 } // namespace priv
 } // namespace Infector

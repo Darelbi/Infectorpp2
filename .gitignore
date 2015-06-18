@@ -2,6 +2,8 @@
 *.dll
 *.def
 *.o
-IDEs/CodeBlocks/Infectorpp_build_log.html
+IDEs/
+bin/
+build/
 Improvements.txt
 TestRoot.cpp

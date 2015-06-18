@@ -31,5 +31,8 @@ add_library_type( libInfectorpp2 STATIC)
 include( AddUnityObjectLibrary)
 
 add_unity_object_library( infectorObj)
+
+enable_testing()
+add_subdirectory( tests)
 	
 	

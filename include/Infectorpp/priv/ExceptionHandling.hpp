@@ -1,7 +1,8 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorExport.hpp
+   See copyright notice in InfectorTraits.hpp
 *******************************************************************************/
+#pragma once
 #include <exception>
 
 //uncomment following line to disable all TRY / CATCH clauses inside Infectorpp
@@ -16,30 +17,60 @@
 	#undef NDEBUG
 	#include <assert.h>
 
-	#define INFECTORPP_CONDITIONAL_EXCEPTION( body, rollback)  {body}
-	
-	#define INFECTORPP_CONDITIONAL_THROW ( condition, ex, message) \
-		assert(false && message);
+	#undef INFECTORPP_TRY
+	#undef INFECTORPP_CATCH
+	#undef INFECTORPP_RETHROW
+	#define INFECTORPP_TRY
+	#define INFECTORPP_CATCH
+	#define INFECTORPP_RETHROW
 	
 #else
 	
-	#define INFECTORPP_CONDITIONAL_EXCEPTION( body, rollback) \
-	try{ body } catch ( std::exception& ex) { rollback }
-	
-	#define INFECTORPP_CONDITIONAL_THROW ( condition, ex, message) \
-		if( condition) throw ex(message);
+	#undef INFECTORPP_TRY
+	#undef INFECTORPP_CATCH
+	#undef INFECTORPP_RETHROW
+	#define INFECTORPP_TRY	try{
+	#define INFECTORPP_CATCH }  catch ( std::exception& ex) {
+	#define INFECTORPP_RETHROW throw ex; }
 
+#endif
+
+#ifndef _MSC_VER // Visual studio 2013 still does not support "noexcept"
+                 // need a workaround thanks to  wtravisjones for bug report.
+    #define INFECTORPP_NOEXCEPT noexcept(true)
+#else
+    #define NOEXCEPT
 #endif
 
 namespace Infector{
 namespace priv{
 	
-	class RebindEx{
-		public:
-		static const char * message(){
-			"\nCannot bind same interface twice\n";
-		}
-	};
+	template< typename M>
+	void throwOrBreak(){
+		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
+			assert(false && M::what());
+		#else
+			throw M();
+		#endif
+	}
+	
+	class RebindEx: public virtual std::invalid_argument{
+    public:
+		RebindEx():std::invalid_argument(what()){ 		}
+		
+        virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nCannot bind same interface twice\n";
+        }
+    };
+	
+	class CircularDependencyEx: public virtual std::invalid_argument{
+    public:
+		CircularDependencyEx():std::invalid_argument(what()){ 		}
+		
+        virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nCircular Dependency detected\n";
+        }
+    };
 	
 }
 }

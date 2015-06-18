@@ -1,10 +1,9 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorExport.hpp
+   See copyright notice in InfectorTraits.hpp
 *******************************************************************************/
 #pragma once
 #include "ExceptionHandling.hpp"
-
 #include <unordered_map>
 
 
@@ -20,24 +19,26 @@ class GenericBinding {
 
 public:
 
-	void bind( TypeInfoP something, Y interface){
-		INFECTORPP_CONDITIONAL_THROW(
-			if(get(interface)!=nullptr),
-				std::invalid_argument,	M::message() )
+	void bind( Y something, TypeInfoP interface){
+		if( found(get(interface)))
+			throwOrBreak< M>();
 		
 		bindings.insert( std::pair< std::type_index, Y>
                     ( std::type_index(*interface), something));
 	}
 
-	void remove( Y interface){
+	void remove( TypeInfoP interface){
 		auto it = bindings.find( std::type_index(*interface) );
 		if(it!=bindings.end())
 			bindings.erase( it);
 	}
 
-	X get( Y interface){
-		auto it = bindings.find( std::type_index(*interface));
-		return it!=bindings.end()? it->second : nullptr;
+	typename TypeMap::iterator get( TypeInfoP interface){
+		return bindings.find( std::type_index(*interface));
+	}
+	
+	bool found(typename TypeMap::iterator it){
+		return it != bindings.end();
 	}
 
 	GenericBinding() = default;

@@ -1,20 +1,4 @@
 /*******************************************************************************
-   Copyright (C) 2015 Dario Oliveri
-   See copyright notice at the end of this file
-*******************************************************************************/
-#pragma once
-
-#if defined (INFECTOR_EXPORT)|| defined(INFECTOR_IMPORT)
-    #ifdef INFECTOR_EXPORT
-        #define INFECTOR_API __declspec(dllexport)
-    #else
-        #define INFECTOR_API __declspec(dllimport)
-    #endif
-#else
-    #define INFECTOR_API
-#endif
-
-/*******************************************************************************
 The MIT License (MIT)
 
 Copyright (c) 2015 Oliveri Dario
@@ -37,3 +21,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 *******************************************************************************/
+#pragma once
+
+#if defined (INFECTORPP_EXPORT)|| defined(INFECTORPP_IMPORT)
+    #ifdef INFECTORPP_EXPORT
+        #define INFECTORPP_API __declspec(dllexport)
+    #else
+        #define INFECTORPP_API __declspec(dllimport)
+    #endif
+#else
+    #define INFECTORPP_API
+#endif
+
+
