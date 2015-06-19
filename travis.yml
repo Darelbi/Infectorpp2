@@ -1,21 +1,15 @@
-# this travis file is based on build script from Graph-ene project
 language: cpp
 
-compiler:
-  - clang
-  - gcc
+compiler:  
+    - gcc
+    - clang
 
-before_script: cmake CMakeLists.txt
+before_script:  
+    - mkdir build
+    - cd build
+    - cmake ..
 
-script:
-  - $CXX --version
-  - make
-
-
-branches:
-  only:
-    - master
-
+script: make 
 
 os:
   - linux
