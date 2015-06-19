@@ -8,5 +8,5 @@
 #-----------------------------------------------------------------------------
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR}) 
   message(FATAL_ERROR 
-  "Cannot write to badeSource folder, please run CMake from another dir")
+  "Cannot write to Infectorpp folder, please run CMake from another dir")
 endif()

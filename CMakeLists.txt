@@ -9,6 +9,7 @@ project( Infectorpp2)
 set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include( OutOfSourceBuild)
 include( EnableCpp11)
+include( SuperStrictWarnings)
 
 #Target name is used so that you can build a different binary for each
 #target you maintain (Linux, Win32, Win64, Win64 +SSE,  whatever)

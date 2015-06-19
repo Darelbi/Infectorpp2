@@ -61,23 +61,27 @@ public:
                        DETAILS:
     ===========================================*/
 
-
     Container();
-    inline ~Container() = default;
+	
+	virtual ~Container() = default;
 
 private:
-    using destroyContainer    = void(*)( priv::Container*);
-    using ContainerPointer    = std::shared_ptr< priv::Container,
-                                                 destroyContainer>;
 
-    ContainerPointer          container; // Implementation
+	Container(priv::ContainerPointer p);
+
+    priv::ContainerPointer          container; // Implementation
 };
 
 inline Container::Container()
     :
-    container(   priv::createContainer(),
-                &priv::destroyContainer ){
+    container(   priv::createContainer() ){
 
+}
+
+inline Container::Container( priv::ContainerPointer p)
+	:
+	container( p){
+	
 }
 
 template< typename T, typename... Contracts>
@@ -112,21 +116,15 @@ void Container::wire(){
     priv::TypeInfoP types[ sizeof...( SmartPointers)]
                         { &typeid( SmartPointers::type)... };
 						
-	container->touch( &typeid(Impl), types, sizeof...( SmartPointers));
-	
-	container->wire( &typeid(Impl), &factoryFunction<Impl, SmartPointers...>); 
+	container->wire( &typeid(Impl), types, sizeof...( SmartPointers),
+					&factoryFunction<Impl, SmartPointers...>);
+					
 	//TODO. make pair (upcast, and new concrete instance togheter) (when compile context)
 }
 
-std::shared_ptr<Container> Container::splitContainer(){
+Container Container::splitContainer(){
 	
-	return std::move( container->split());
+	return Container( container->split( container));
 }
-
-std::shared_ptr<Context> Container::createContext(){
-	
-	return std::move( container->createContext());
-}
-
 
 } // namespace Infector

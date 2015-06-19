@@ -6,6 +6,10 @@
 
 namespace Infector {
 namespace priv {
+	
+ConcreteContainer::ConcreteContainer( priv::ContainerPointer p)
+	:Parent(p)
+	{  }
 
 void ConcreteContainer::bindSingleAs
 (               TypeInfoP concrete,
@@ -47,21 +51,16 @@ void ConcreteContainer::bindComponent
 }
 
 void ConcreteContainer::wire
-(                   TypeInfoP type,
-                    BuildSignature func){
-
-	Symbols.bind( func, type);
-}
-
-void ConcreteContainer::touch
 (						TypeInfoP type, 
 						TypeInfoP * deps, 
-						std::size_t size) {
+						std::size_t size,
+						BuildSignature func) {
 							
 	std::size_t i = 0;
 
 	INFECTORPP_TRY
 	  
+		Symbols.bind( func, type);
 		Dependencies.setGuard( type);
         for(; i<size; i++)
 			Dependencies.dependOn( type, deps[i], this);
@@ -71,41 +70,39 @@ void ConcreteContainer::touch
     
         //binding successfull till (i-1)th element then partial for i-th element
         Dependencies.remove( type);
+		Symbols.remove( type);
 		
 	INFECTORPP_RETHROW
 #endif
 }
 
 
-virtual std::shared_ptr<Infector::Container> ConcreteContainer::split( std::shared_ptr<Infector::Container>& parent){
+ContainerPointer ConcreteContainer::split( ContainerPointer p){
 	
-	return std::static_pointer_cast< Infector::Container> (
-	
-				std::make_shared( new ConcreteContainer( parent)
-			);
-}
-
-virtual std::shared_ptr<Infector::Context> ConcreteContainer::createContext(){
-	
-	
+	return std::move(  std::static_pointer_cast<priv::Container>(
+					std::make_shared<ConcreteContainer>( p)
+					)  );
 }
 
 TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 
-//TODO: recursive up, and DAG should ask for that instead of memoizing 
-//(at least on version 1 that don't need to be excessively optimized)
-	auto concrete = Bindings.get(interface);
+
+	auto concrete = Bindings.get( interface);
 	return 
-			Bindings.found(concrete)? 
-									std::get<0>(concrete->second) 
-								:	nullptr;
+		Bindings.found( concrete)? 
+							std::get<0>( concrete->second) 
+						:	(Parent?
+								Parent->getConcreteFromInterface(interface)
+								: nullptr);
 }
 
-Container * createContainer(){
-    return new ConcreteContainer();
+ConcreteContainer::~ConcreteContainer(){
+	
 }
 
-void destroyContainer( Container * c){
-    delete c;
+ContainerPointer createContainer(){
+    return std::move(  std::static_pointer_cast<priv::Container>(
+					std::make_shared<ConcreteContainer>()
+					)  );
 }
 
 } // namespace priv

@@ -3,16 +3,18 @@
    See copyright notice in InfectorTraits.hpp
 *******************************************************************************/
 #pragma once
+#include <memory>
 
 namespace Infector {
+namespace priv {
 	
 	class Container;
-	class Context;
-	
-namespace priv {
+	using ContainerPointer = std::shared_ptr< Container>;
 
-class Context;
-
+/** Dependency Injection container.. Do not user this class directly
+	It can be cumbersome. Use instead the very convenient wrapper:
+	InfectorContainer.hpp.
+	*/
 class Container{
 
 public:
@@ -28,21 +30,19 @@ public:
 									TypeInfoP interface,
 									UpcastSignature * upcast,
 									std::size_t size) = 0;
-
-    /** Register a factory function for given type.*/
-    virtual void wire( 	TypeInfoP type, 
-						BuildSignature func) = 0;
 	
 	/** Update dependency graph.*/
-	virtual void touch( TypeInfoP type, 
+	virtual void wire( 	TypeInfoP type, 
 						TypeInfoP * dependencies, 
-						std::size_t size) = 0;
+						std::size_t size,
+						BuildSignature func) = 0;
 						
 	/** Split the container. */
-	virtual std::shared_ptr<Infector::Container> split() = 0;
+	virtual ContainerPointer split( ContainerPointer p) = 0;
 	
-	/** Create a new context. */
-	virtual std::shared_ptr<Infector::Context> createContext() = 0;
+	
+	/** Obtain implementation from interface. */
+	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) = 0;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Container() = default;
@@ -64,9 +64,7 @@ public:
 
 // Decouple user from most implementations details to reduce compile time
 // and separate "typechecking" from library logic
-Container * INFECTORPP_API createContainer();
-
-void INFECTORPP_API destroyContainer( Container * c);
+ContainerPointer INFECTORPP_API createContainer();
 
 } // namespace priv
 } // namespace Infector

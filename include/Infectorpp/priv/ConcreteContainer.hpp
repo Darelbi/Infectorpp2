@@ -33,33 +33,27 @@ public:
 									std::size_t size) override;
 
 	/** Register a factory function for given type. */
-    virtual void wire( TypeInfoP type,
-                       BuildSignature func) override;
-					   
-	/** Update dependency graph. */
-	virtual void touch( TypeInfoP type,
-						TypeInfoP * dependencies,
-						std::size_t size) override;
+    virtual void wire( 	TypeInfoP type, 
+						TypeInfoP * dependencies, 
+						std::size_t size,
+						BuildSignature func) override;
 						
 	/** Split the container. */
-	virtual std::shared_ptr<Infector::Container> split() override;
-	
-	/** Create a new context. */
-	virtual std::shared_ptr<Infector::Context> createContext() override;
+	virtual ContainerPointer split( ContainerPointer p) override;
 
     /**========================================
                        DETAILS:
     ===========================================*/
 
-    ConcreteContainer( std::shared_ptr<ConcreteContainer> parent) = default;
+    ConcreteContainer( priv::ContainerPointer p);
 	ConcreteContainer() = default;
-    virtual ~ConcreteContainer() = default;
+    virtual ~ConcreteContainer();
 
 	using TypeBinding	 	= GenericBinding< RebindEx,
 					std::tuple< TypeInfoP, UpcastSignature, std::size_t> >;
 	using SymbolTable		= GenericBinding< RebindEx, BuildSignature>;
 	
-	TypeInfoP getConcreteFromInterface( TypeInfoP interface);
+	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) override;
 
 private:
 
@@ -71,7 +65,7 @@ private:
 
 	}
 	
-	
+	ContainerPointer	Parent = nullptr;
 	TypeBinding			Bindings;
 	SymbolTable			Symbols;
 	DependencyDAG		Dependencies;
