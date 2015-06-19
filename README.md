@@ -1,6 +1,7 @@
 ### Infectorpp (v2)
 
-PLEASE SPEND 5 MINUTES:
-
 I developed Infectorpp and the offical repo was this one: https://code.google.com/p/infectorpp/
-Now I'm developing Infectorpp2 wich is part of my laurea thesis. Infectorpp2 is still incomplete, but still MINE work (every contribution will be credited). I see people on social networks claiming Infectorpp as their works wich is not true..
+Now I'm developing Infectorpp2 and the official repository is this one. 
+
+Reason:
+Version 1 had a number of issues that could be addressed only after a heavy refactoring session (redo from scratch) wich is what I'm actually doing. It also has a number of enanchments and features.
