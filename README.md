@@ -1,8 +1,6 @@
 ### Infectorpp (v2)
 
+PLEASE SPEND 5 MINUTES:
 
- * I no longer maintain version 1, the official repo for v1 becomes: https://github.com/ViteFalcon/infectorpp
- * I mantain **version 2** wich is a totally new framework I redesigned again from scratch
- * Since ViteFalcon is so kind to maintain v1, I will keep an eye on his branch too to eventually help or integrate most usefull changes
-
-This is the new DEVELOPMENT branch for Infectorpp (v2)
+I developed Infectorpp and the offical repo was this one: https://code.google.com/p/infectorpp/
+Now I'm developing Infectorpp2 wich is part of my laurea thesis. Infectorpp2 is still incomplete, but still MINE work (every contribution will be credited). I see people on social networks claiming Infectorpp as their works wich is not true..
