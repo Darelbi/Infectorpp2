@@ -1,4 +1,4 @@
-### Infectorpp (v2)
+### Infectorpp (v2) https://travis-ci.org/Darelbi/Infectorpp.svg?branch=master
 
 I developed Infectorpp and the offical repo was this one: https://code.google.com/p/infectorpp/
 Now I'm developing Infectorpp2 and the official repository is this one. 
