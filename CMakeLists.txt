@@ -15,13 +15,10 @@ include( EnableCpp11)
 set(INFECTORPP2_TARGET_NAME "bin" CACHE STRING
     "Give the name you like most to a logical target")
 
-#travis don't have latest Cmake wich is required by target_compile_definitions	
 include( AddLibraryType)
 
-#so I have to comment out some commands.. for now
-
-#set(SHARED_BUILD true BOOL )
-#add_library_type( Infectorpp2 SHARED)
+set(SHARED_BUILD true BOOL )
+add_library_type( Infectorpp2 SHARED)
 
 set(SHARED_BUILD false )
 add_library_type( libInfectorpp2 STATIC)

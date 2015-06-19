@@ -16,7 +16,7 @@
 namespace Infector {
 namespace priv {
 
-class ConcreteContainer: public virtual Container{
+class ConcreteContainer: public Container{
 
 public:
 
@@ -26,26 +26,33 @@ public:
 								UpcastSignature * upcasts,
 								std::size_t size) override;
 								
-	/** Bind a component to its type registering metainfo */
+	/** Bind a component to its type registering metainfo. */
     virtual void bindComponent( 	TypeInfoP concrete,
 									TypeInfoP interface,
 									UpcastSignature * upcast,
 									std::size_t size) override;
 
-	/** Register a factory function for given type*/
+	/** Register a factory function for given type. */
     virtual void wire( TypeInfoP type,
                        BuildSignature func) override;
 					   
-	/** Update dependency graph.*/
+	/** Update dependency graph. */
 	virtual void touch( TypeInfoP type,
 						TypeInfoP * dependencies,
 						std::size_t size) override;
+						
+	/** Split the container. */
+	virtual std::shared_ptr<Infector::Container> split() override;
+	
+	/** Create a new context. */
+	virtual std::shared_ptr<Infector::Context> createContext() override;
 
     /**========================================
                        DETAILS:
     ===========================================*/
 
-    ConcreteContainer() = default;
+    ConcreteContainer( std::shared_ptr<ConcreteContainer> parent) = default;
+	ConcreteContainer() = default;
     virtual ~ConcreteContainer() = default;
 
 	using TypeBinding	 	= GenericBinding< RebindEx,
@@ -63,7 +70,8 @@ private:
 			binding.remove( interfaces[i]);
 
 	}
-
+	
+	
 	TypeBinding			Bindings;
 	SymbolTable			Symbols;
 	DependencyDAG		Dependencies;

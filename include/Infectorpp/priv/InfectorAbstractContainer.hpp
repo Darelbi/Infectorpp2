@@ -5,6 +5,10 @@
 #pragma once
 
 namespace Infector {
+	
+	class Container;
+	class Context;
+	
 namespace priv {
 
 class Context;
@@ -33,6 +37,12 @@ public:
 	virtual void touch( TypeInfoP type, 
 						TypeInfoP * dependencies, 
 						std::size_t size) = 0;
+						
+	/** Split the container. */
+	virtual std::shared_ptr<Infector::Container> split() = 0;
+	
+	/** Create a new context. */
+	virtual std::shared_ptr<Infector::Context> createContext() = 0;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Container() = default;

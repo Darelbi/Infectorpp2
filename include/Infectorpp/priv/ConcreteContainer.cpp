@@ -76,7 +76,23 @@ void ConcreteContainer::touch
 #endif
 }
 
-TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){
+
+virtual std::shared_ptr<Infector::Container> ConcreteContainer::split( std::shared_ptr<Infector::Container>& parent){
+	
+	return std::static_pointer_cast< Infector::Container> (
+	
+				std::make_shared( new ConcreteContainer( parent)
+			);
+}
+
+virtual std::shared_ptr<Infector::Context> ConcreteContainer::createContext(){
+	
+	
+}
+
+TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 
+//TODO: recursive up, and DAG should ask for that instead of memoizing 
+//(at least on version 1 that don't need to be excessively optimized)
 	auto concrete = Bindings.get(interface);
 	return 
 			Bindings.found(concrete)? 

@@ -24,8 +24,8 @@ macro( add_unity_object_library    arg1)
   
   # ...Build "all.cpp" instead
   add_library( ${arg1} OBJECT ${CMAKE_CURRENT_BINARY_DIR}/include/Infectorpp/priv/all.cpp
-    ${sourceFiles}  #Add source files to the IDE
-    ${headers}      #Add headers to the IDE
+	${sourceFiles}  #Add source files to the IDE
+	${headers}      #Add headers to the IDE
   )
   
 endmacro( add_unity_object_library)

@@ -45,7 +45,7 @@ public:
 		The purpose is to allow mocking and to allow reusing part of
 		application configuration minimizing changes needed.
 		*/
-    Container splitContainer();
+    std::shared_ptr<Container> splitContainer();
 
     /** HIERARCHY:
 		Once a context is created from any point of the hierarchy
@@ -67,7 +67,7 @@ public:
 
 private:
     using destroyContainer    = void(*)( priv::Container*);
-    using ContainerPointer    = std::unique_ptr< priv::Container,
+    using ContainerPointer    = std::shared_ptr< priv::Container,
                                                  destroyContainer>;
 
     ContainerPointer          container; // Implementation
@@ -117,4 +117,16 @@ void Container::wire(){
 	container->wire( &typeid(Impl), &factoryFunction<Impl, SmartPointers...>); 
 	//TODO. make pair (upcast, and new concrete instance togheter) (when compile context)
 }
+
+std::shared_ptr<Container> Container::splitContainer(){
+	
+	return std::move( container->split());
+}
+
+std::shared_ptr<Context> Container::createContext(){
+	
+	return std::move( container->createContext());
+}
+
+
 } // namespace Infector

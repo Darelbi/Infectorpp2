@@ -21,10 +21,8 @@ class DependencyDAG{
 	
 	/** Coloring of nodes when touched during a visit.*/
 	enum class Color: int{
-		BLACK,  //
 		BLUE,	// interface without concrete type
-		PURPLE, // marked before a visit to detect circular dependency
-		WHITE   // touched during a visit (no need to revisit)
+		WHITE   // wired
 	};
 	
 	using Concrete = TypeInfoP;
