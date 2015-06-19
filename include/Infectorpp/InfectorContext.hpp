@@ -1,6 +1,6 @@
 /*******************************************************************************
-   Copyright (C) 2014 Dario Oliveri
-   See copyright notice in InfectorCommon.hpp
+   Copyright (C) 2015 Dario Oliveri
+   See copyright notice in InfectorTraits.hpp
 *******************************************************************************/
 #pragma once
 #include "priv/InfectorAbstractContext.hpp"

@@ -15,7 +15,7 @@ struct A{
 
 };
 
-struct B: public virtual A{
+struct B: public A{
 
 };
 
@@ -23,7 +23,7 @@ struct kk{
 
 };
 
-struct JJ: public virtual kk{
+struct JJ: public kk{
 
 };
 

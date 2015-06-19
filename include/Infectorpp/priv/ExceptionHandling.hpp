@@ -22,16 +22,16 @@
 	#undef INFECTORPP_RETHROW
 	#define INFECTORPP_TRY
 	#define INFECTORPP_CATCH
-	#define INFECTORPP_RETHROW
-	
+	#define INFECTORPP_RETHROW 
+
 #else
-	
+
 	#undef INFECTORPP_TRY
 	#undef INFECTORPP_CATCH
 	#undef INFECTORPP_RETHROW
 	#define INFECTORPP_TRY	try{
-	#define INFECTORPP_CATCH }  catch ( std::exception& ex) {
-	#define INFECTORPP_RETHROW throw ex; }
+	#define INFECTORPP_CATCH }  catch ( std::exception& ex) { {
+	#define INFECTORPP_RETHROW }throw ex; }
 
 #endif
 
@@ -44,7 +44,7 @@
 
 namespace Infector{
 namespace priv{
-	
+
 	template< typename M>
 	void throwOrBreak(){
 		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
@@ -53,24 +53,24 @@ namespace priv{
 			throw M();
 		#endif
 	}
-	
+
 	class RebindEx: public virtual std::invalid_argument{
     public:
 		RebindEx():std::invalid_argument(what()){ 		}
-		
+
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCannot bind same interface twice\n";
         }
     };
-	
+
 	class CircularDependencyEx: public virtual std::invalid_argument{
     public:
 		CircularDependencyEx():std::invalid_argument(what()){ 		}
-		
+
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCircular Dependency detected\n";
         }
     };
-	
+
 }
 }

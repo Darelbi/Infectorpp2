@@ -1,6 +1,6 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorExport.hpp
+   See copyright notice in InfectorTraits.hpp
 *******************************************************************************/#include "ConcreteContainer.hpp"
 
 
@@ -23,12 +23,14 @@ void ConcreteContainer::bindSingleAs
 			// but need DAG being able to check concretes from abstracts
 		}
 		
+#ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING	
 	INFECTORPP_CATCH
     
         //binding successfull till (i-1)th element then partial for i-th element
         bindingRollback( Bindings, interfaces, i);
 		
 	INFECTORPP_RETHROW
+#endif
 }
 
 
@@ -63,13 +65,15 @@ void ConcreteContainer::touch
 		Dependencies.setGuard( type);
         for(; i<size; i++)
 			Dependencies.dependOn( type, deps[i], this);
-			
+		
+#ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING			
 	INFECTORPP_CATCH
     
         //binding successfull till (i-1)th element then partial for i-th element
         Dependencies.remove( type);
 		
 	INFECTORPP_RETHROW
+#endif
 }
 
 TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){
