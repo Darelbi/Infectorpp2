@@ -55,14 +55,16 @@ public:
 //				IMPORT/EXPORT stuff needed for windows users
 //_____________________________________________________________________________
 
-#if defined (INFECTORPP_EXPORT)|| defined(INFECTORPP_IMPORT)
-    #ifdef INFECTORPP_EXPORT
-        #define INFECTORPP_API __declspec(dllexport)
-    #else
-        #define INFECTORPP_API __declspec(dllimport)
-    #endif
-#else
-    #define INFECTORPP_API
+#ifndef INFECTORPP_API
+	#if defined (INFECTORPP_EXPORT)|| defined(INFECTORPP_IMPORT)
+		#ifdef INFECTORPP_EXPORT
+			#define INFECTORPP_API __declspec(dllexport)
+		#else
+			#define INFECTORPP_API __declspec(dllimport)
+		#endif
+	#else
+		#define INFECTORPP_API
+	#endif
 #endif
 
 // Decouple user from most implementations details to reduce compile time

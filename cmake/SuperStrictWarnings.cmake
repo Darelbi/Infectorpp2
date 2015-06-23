@@ -7,5 +7,6 @@ if(MINGW)
                       -Wpointer-arith -Wcast-qual -Wwrite-strings
                       -Wvolatile-register-var -Wno-unused-parameter
                       -Wno-variadic-macros -Wunreachable-code -Wcast-align
-                      -Wzero-as-null-pointer-constant -Wold-style-cast)
+                      #-Wzero-as-null-pointer-constant #commented because Cmake generate crappy code 
+					  -Wold-style-cast)
 endif()

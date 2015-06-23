@@ -67,6 +67,8 @@ private:
 
 	}
 	
+	void rollbackWire(TypeInfoP p);
+	
 	ContainerPointer	Parent = nullptr;
 	TypeBinding			Bindings;
 	SymbolTable			Symbols;

@@ -53,7 +53,8 @@ private:
 								ConcreteContainer * container,
 								int HARD_RECURSION_LIMIT);
 								
-	bool getDependencies( TypeInfoP, std::list< TypeInfoP> & out); 
+	std::pair< std::list<TypeInfoP>, bool >
+		getDependencies( TypeInfoP); 
 	//
 	//when you realize your Typo was "TypO" instead of "TypE" u.u ...
 };

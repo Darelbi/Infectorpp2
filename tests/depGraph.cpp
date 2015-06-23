@@ -6,7 +6,11 @@
 #include <typeindex>
 #include <priv/DependencyDAG.hpp>
 #include <priv/ConcreteContainer.hpp>
+#include <priv/ExceptionHandling.hpp>
+#undef NDEBUG
 #include <assert.h>
+#include <iostream>
+
 
 using namespace Infector;
 using namespace Infector::priv;
@@ -51,7 +55,8 @@ void bindSingleAs( ConcreteContainer * p){
 
 int depGraph( int argc, char ** argv){
 	
-	DependencyDAG dag;
+	DependencyDAG dag(nullptr);
+	
 	ConcreteContainer co;
 
 	bindSingleAs<B,  A>(&co);
@@ -65,26 +70,24 @@ int depGraph( int argc, char ** argv){
 		bindSingleAs<B,  A>(&co);
 		assert(false); //test failed
 	}
-	catch(RebindEx &ex){
+	catch( RebindEx &ex){
 		
 	}
-	catch(...){
-		assert(false); //test failed
-	}
+	
+	dag.setGuard( &typeid(B));
 	
 	try{
 		dag.dependOn( &typeid(B), &typeid(kk), &co);
 		assert(false); //test failed
 	}
-	catch(CircularDependencyEx &ex){
+	catch( CircularDependencyEx &ex){
 		
-	}
-	catch(...){
-		assert(false); //test failed
 	}
 	
 	bindSingleAs<C,  C>(&co);
 	bindSingleAs<D, D>(&co);
+	
+	
 	
 	dag.setGuard( &typeid(C));
 	dag.setGuard( &typeid(D));

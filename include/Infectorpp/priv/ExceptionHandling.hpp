@@ -18,20 +18,12 @@
 	#include <assert.h>
 
 	#undef INFECTORPP_TRY
-	#undef INFECTORPP_CATCH
-	#undef INFECTORPP_RETHROW
 	#define INFECTORPP_TRY
-	#define INFECTORPP_CATCH
-	#define INFECTORPP_RETHROW 
 
 #else
 
 	#undef INFECTORPP_TRY
-	#undef INFECTORPP_CATCH
-	#undef INFECTORPP_RETHROW
 	#define INFECTORPP_TRY	try{
-	#define INFECTORPP_CATCH }  catch ( std::exception& ex) { {
-	#define INFECTORPP_RETHROW }throw ex; }
 
 #endif
 
@@ -41,6 +33,7 @@
 #else
     #define NOEXCEPT
 #endif
+
 
 namespace Infector{
 namespace priv{
@@ -54,23 +47,32 @@ namespace priv{
 		#endif
 	}
 
-	class RebindEx: public virtual std::invalid_argument{
+	class RebindEx: public virtual std::exception{
     public:
-		RebindEx():std::invalid_argument(what()){ 		}
-
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCannot bind same interface twice\n";
         }
     };
 
-	class CircularDependencyEx: public virtual std::invalid_argument{
+	class CircularDependencyEx: public virtual std::exception{
     public:
-		CircularDependencyEx():std::invalid_argument(what()){ 		}
-
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCircular Dependency detected\n";
         }
     };
-
+	
+	class TooDeepRecursionEx: public virtual std::exception{
+    public:
+        virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nReached hard recursion limit\n";
+        }
+    };
+	
+	class NotReachableEx: public virtual std::exception{
+    public:
+        virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nThis is a infectorpp bug, report it at\n https://github.com/Darelbi/Infectorpp \n";
+        }
+    };
 }
 }

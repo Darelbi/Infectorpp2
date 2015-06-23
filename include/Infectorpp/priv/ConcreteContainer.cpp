@@ -33,12 +33,12 @@ void ConcreteContainer::bindSingleAs
 		}
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING	
-	INFECTORPP_CATCH
+	} catch( RebindEx & ex){
     
         //binding successfull till (i-1)th element then partial for i-th element
         bindingRollback( Bindings, interfaces, i);
-		
-	INFECTORPP_RETHROW
+		throw ex;
+	}
 #endif
 }
 
@@ -71,14 +71,24 @@ void ConcreteContainer::wire
 			Dependencies.dependOn( type, deps[i], this);
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING			
-	INFECTORPP_CATCH
+	} catch( RebindEx & ex){
     
         //binding successfull till (i-1)th element then partial for i-th element
-        Dependencies.remove( type);
-		Symbols.remove( type);
+        rollbackWire(type);
+		throw ex;
 		
-	INFECTORPP_RETHROW
+	} catch( std::exception & ex){
+		
+		rollbackWire(type);
+		throw ex;
+	}
 #endif
+}
+
+void ConcreteContainer::rollbackWire(TypeInfoP type){
+	
+	Dependencies.remove( type);
+	Symbols.remove( type);
 }
 
 DependencyDAG * ConcreteContainer::getGraph(){

@@ -17,13 +17,13 @@ DependencyDAG::DependencyDAG( DependencyDAG * p){
 
 void DependencyDAG::setGuard( TypeInfoP g){
 	guard = g;
-	dependencies[ std::type_index(*g)] = std::list< TypeInfoP>();
+	//dependencies[ std::type_index(*g)] = std::list< TypeInfoP>();
 }
 
 void DependencyDAG::dependOn( TypeInfoP wired, TypeInfoP abstractDep,
 									ConcreteContainer * container){
 	addDependency( wired, abstractDep);
-	addDependant( wired, abstractDep);
+	//addDependant( wired, abstractDep);
 	
 	const int HARD_RECURSION_LIMIT = 40; //lower better
 	checkGuardBreaking( wired, container, HARD_RECURSION_LIMIT);
@@ -44,13 +44,13 @@ void DependencyDAG::addDependency( TypeInfoP wired, TypeInfoP abstractDep){
 	auto edge = std::find (hashEntry.begin(), hashEntry.end(), abstractDep);
 
 	if (edge != hashEntry.end())
-		hashEntry.push_back( abstractDep);
+		hashEntry.push_back( abstractDep);		
 }
 
 
 void DependencyDAG::addDependant( TypeInfoP wired, TypeInfoP abstractDep){
 	// An interface is used by XXX concrete types
-	auto  & hashEntry = dependencies.insert( 
+	auto  & hashEntry = dependants.insert( 
 										std::make_pair(	std::type_index(*abstractDep),
 														std::list< TypeInfoP>() )
 										).first->second;
@@ -71,11 +71,11 @@ void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 			throwOrBreak< TooDeepRecursionEx>();
 		
 	//check dependencies of a particular wired type.
-	std::list< TypeInfoP> deps;
-	if( getDependencies( currentNode, deps)==false)
+	auto result = getDependencies( currentNode);
+	if(result.second == false)
 		return;
 		
-	for (auto& interface : deps){
+	for (auto interface : result.first){
 		auto resolvedType = container->getConcreteFromInterface(interface);
 		if( resolvedType == guard)
 			throwOrBreak< CircularDependencyEx>();
@@ -86,14 +86,14 @@ void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 	}
 }
 
-bool DependencyDAG::getDependencies( TypeInfoP concrete, std::list< TypeInfoP> & out){
+std::pair< std::list<TypeInfoP>, bool >
+	DependencyDAG::getDependencies( TypeInfoP concrete){
 	auto result = dependencies.find( std::type_index(*concrete));
-	if(  result != dependencies.end()){
-		out = result->second;
-		return true;
-	}
+	if(  result != dependencies.end())
+		return std::make_pair( result->second, true);
 
-	return parent->getDependencies(concrete, out);
+	return parent? parent->getDependencies(concrete):
+		std::make_pair( std::list<TypeInfoP>(), false);
 }
 
 void DependencyDAG::remove( TypeInfoP wired){
