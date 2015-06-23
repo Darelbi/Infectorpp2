@@ -5,10 +5,12 @@
 #pragma once
 #include <memory>
 
+
 namespace Infector {
 namespace priv {
 	
 	class Container;
+	class DependencyDAG;
 	using ContainerPointer = std::shared_ptr< Container>;
 
 /** Dependency Injection container.. Do not user this class directly
@@ -28,7 +30,7 @@ public:
 	/** Bind a component to its type registering metainfo. */
     virtual void bindComponent( 	TypeInfoP concrete,
 									TypeInfoP interface,
-									UpcastSignature * upcast,
+									UpcastSignature upcast,
 									std::size_t size) = 0;
 	
 	/** Update dependency graph.*/
@@ -44,6 +46,7 @@ public:
 	/** Obtain implementation from interface. */
 	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) = 0;
 
+	
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Container() = default;
 };

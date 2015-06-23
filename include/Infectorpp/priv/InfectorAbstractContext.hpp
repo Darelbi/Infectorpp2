@@ -9,7 +9,9 @@
 namespace Infector {
 namespace priv{
 
-using FuncP = void(*)(void*);
+	class Context;
+	using FuncP = void(*)(void*);
+	using ContextPointer = std::shared_ptr< Context>;
 
 class Context{
 

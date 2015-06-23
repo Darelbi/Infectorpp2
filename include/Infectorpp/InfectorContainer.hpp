@@ -5,7 +5,7 @@
 #pragma once
 #include "InfectorTraits.hpp"
 #include "priv/InfectorAbstractContainer.hpp"
-
+#include "InfectorContext.hpp"
 
 
 namespace Infector {
@@ -45,7 +45,7 @@ public:
 		The purpose is to allow mocking and to allow reusing part of
 		application configuration minimizing changes needed.
 		*/
-    std::shared_ptr<Container> splitContainer();
+    Container splitContainer();
 
     /** HIERARCHY:
 		Once a context is created from any point of the hierarchy
@@ -114,7 +114,7 @@ void Container::wire(){
 	isWireable< Impl>(); //compile time test
 
     priv::TypeInfoP types[ sizeof...( SmartPointers)]
-                        { &typeid( SmartPointers::type)... };
+                        { &typeid(typename SmartPointers::type)... };
 						
 	container->wire( &typeid(Impl), types, sizeof...( SmartPointers),
 					&factoryFunction<Impl, SmartPointers...>);

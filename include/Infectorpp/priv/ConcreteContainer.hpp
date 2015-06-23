@@ -29,7 +29,7 @@ public:
 	/** Bind a component to its type registering metainfo. */
     virtual void bindComponent( 	TypeInfoP concrete,
 									TypeInfoP interface,
-									UpcastSignature * upcast,
+									UpcastSignature upcast,
 									std::size_t size) override;
 
 	/** Register a factory function for given type. */
@@ -45,8 +45,8 @@ public:
                        DETAILS:
     ===========================================*/
 
-    ConcreteContainer( priv::ContainerPointer p);
-	ConcreteContainer() = default;
+    ConcreteContainer( priv::ContainerPointer p, DependencyDAG  * d);
+	ConcreteContainer();
     virtual ~ConcreteContainer();
 
 	using TypeBinding	 	= GenericBinding< RebindEx,
@@ -54,6 +54,8 @@ public:
 	using SymbolTable		= GenericBinding< RebindEx, BuildSignature>;
 	
 	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) override;
+	
+	DependencyDAG * getGraph();
 
 private:
 

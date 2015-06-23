@@ -98,7 +98,7 @@ static void * factoryFunction( priv::Context * ctx){
 template< typename T>
 struct Shared{
     using pointerType = std::shared_ptr<T>;
-	using Type = T;
+	using type = T;
     static std::shared_ptr<T> resolve( priv::Context * ctx){
         return std::static_pointer_cast<T>( ctx->instance( &typeid(T)) );
     }
@@ -107,7 +107,7 @@ struct Shared{
 template< typename T>
 struct Unique{
     using pointerType = std::unique_ptr<T>;
-	using Type = T;
+	using type = T;
     static std::unique_ptr<T> resolve( priv::Context * ctx){
         //return static_cast<T*> (ctx->create(&typeid(T)));  //can return plain pointer now :D
 		return std::unique_ptr<T>(static_cast<T*> (ctx->create(&typeid(T))));

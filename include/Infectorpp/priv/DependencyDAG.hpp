@@ -19,21 +19,14 @@ class ConcreteContainer;
 	by context only by creating a SymbolTable)*/
 class DependencyDAG{
 	
-	/** Coloring of nodes when touched during a visit.*/
-	enum class Color: int{
-		BLUE,	// interface without concrete type
-		WHITE   // wired
-	};
-	
-	using Concrete = TypeInfoP;
-	using Abstract = TypeInfoP;
-	using Edge =  std::tuple< Color, Concrete, Abstract>;
-	
 	using EdgeMap = std::unordered_map< std::type_index, 
-										std::list<  Edge> >;
+										std::list< TypeInfoP> >;
 
-	EdgeMap 	concretes;
-	TypeInfoP 	guard = nullptr;
+	EdgeMap 	dependencies;
+	EdgeMap		dependants;
+	
+	TypeInfoP 		guard = nullptr;
+	DependencyDAG*	parent = nullptr;
 
 public:
 	
@@ -45,12 +38,24 @@ public:
 	
 	void remove( TypeInfoP concrete);
 	
-	DependencyDAG() = default;
+	DependencyDAG( DependencyDAG * parent);
 	~DependencyDAG() = default;
 	
 private:
 
-	void checkGuardBreaking( TypeInfoP);
+	void removeDependant( TypeInfoP wired, TypeInfoP abstractDep);
+
+	void addDependency( TypeInfoP wired, TypeInfoP abstractDep);
+	
+	void addDependant( TypeInfoP wired, TypeInfoP abstractDep);
+
+	void checkGuardBreaking( 	TypeInfoP currentNode,
+								ConcreteContainer * container,
+								int HARD_RECURSION_LIMIT);
+								
+	bool getDependencies( TypeInfoP, std::list< TypeInfoP> & out); 
+	//
+	//when you realize your Typo was "TypO" instead of "TypE" u.u ...
 };
 	
 

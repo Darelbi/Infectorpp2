@@ -7,10 +7,15 @@
 namespace Infector {
 namespace priv {
 	
-ConcreteContainer::ConcreteContainer( priv::ContainerPointer p)
-	:Parent(p)
+ConcreteContainer::ConcreteContainer( priv::ContainerPointer p, DependencyDAG  * d)
+	:Parent(p), Dependencies(d)
 	{  }
 
+ConcreteContainer::ConcreteContainer()
+	:Parent( nullptr), Dependencies( nullptr){
+	
+}
+	
 void ConcreteContainer::bindSingleAs
 (               TypeInfoP concrete,
                 TypeInfoP * interfaces,
@@ -42,10 +47,10 @@ void ConcreteContainer::bindSingleAs
 void ConcreteContainer::bindComponent
 ( 				TypeInfoP concrete,
 				TypeInfoP interface,
-				UpcastSignature * upcasts,
+				UpcastSignature upcast,
 				std::size_t size){
 
-	Bindings.bind(	std::make_tuple( concrete, upcasts[0], size), 
+	Bindings.bind(	std::make_tuple( concrete, upcast, size), 
 						interface);
 	
 }
@@ -76,11 +81,14 @@ void ConcreteContainer::wire
 #endif
 }
 
+DependencyDAG * ConcreteContainer::getGraph(){
+	return &Dependencies;
+}
 
 ContainerPointer ConcreteContainer::split( ContainerPointer p){
 	
 	return std::move(  std::static_pointer_cast<priv::Container>(
-					std::make_shared<ConcreteContainer>( p)
+					std::make_shared<ConcreteContainer>( p, &Dependencies)
 					)  );
 }
 

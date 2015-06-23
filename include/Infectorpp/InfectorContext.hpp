@@ -4,9 +4,7 @@
 *******************************************************************************/
 #pragma once
 #include "priv/InfectorAbstractContext.hpp"
-#include "InfectorPointers.hpp"
 
-#include <memory>
 
 namespace Infector {
 
@@ -94,12 +92,15 @@ public:
 
 
 
-    Context(ContextPointer && context_impl);
+    //Context(ContextPointer && context_impl);
     inline ~Context() = default;
+	
+	using ContextPointer = std::shared_ptr<priv::Context>;
 
 private:
 
-    ContextPointer          context;
+	
+	ContextPointer          context;
 
 
 };
