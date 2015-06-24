@@ -1,4 +1,4 @@
-if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "Clang")
+if ($ENV{CMAKE_FORCE_OPTIONS_FOR} MATCHES "Clang")
 	add_compile_options( -Woverloaded-virtual -Wctor-dtor-privacy -Wconversion
                       -Wformat=2 -Winit-self -Winline -Wmissing-include-dirs
                       -Wredundant-decls -Wshadow -Wstack-protector
@@ -11,7 +11,7 @@ if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "Clang")
 					  -Wold-style-cast)
 endif()
 
-if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "GCC")
+if ($ENV{CMAKE_FORCE_OPTIONS_FOR} MATCHES "GCC")
   add_compile_options( -Woverloaded-virtual -Wctor-dtor-privacy -Wconversion
                       -Wformat=2 -Winit-self -Winline -Wmissing-include-dirs
                       -Wredundant-decls -Wshadow -Wstack-protector
