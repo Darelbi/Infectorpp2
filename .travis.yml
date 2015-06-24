@@ -11,9 +11,10 @@ before_install:
   - sudo apt-get install --only-upgrade cmake
 
 install:
+  - echo "$CXX"
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-  - if [ "$CXX" = "g++" ]; then export CMAKE_FORCE_OPTIONS_FOR=GCC; fi
-  - if [ "$CXX" = "clang" ]; then export CMAKE_FORCE_OPTIONS_FOR=Clang; fi
+  - if [ "$CXX" = "g++" ]; then export CMAKE_FORCE_OPTIONS_FOR="GCC"; fi
+  - if [ "$CXX" = "clang" ]; then export CMAKE_FORCE_OPTIONS_FOR="Clang"; fi
 
 addons:
   apt:
