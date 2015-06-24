@@ -73,6 +73,9 @@ int depGraph( int argc, char ** argv){
 	catch( RebindEx &ex){
 		
 	}
+	catch(...){
+		assert(false); //test failed
+	}
 	
 	dag.setGuard( &typeid(B));
 	
@@ -82,6 +85,9 @@ int depGraph( int argc, char ** argv){
 	}
 	catch( CircularDependencyEx &ex){
 		
+	}
+	catch(...){
+		assert(false); //test failed
 	}
 	
 	bindSingleAs<C,  C>(&co);

@@ -5,8 +5,6 @@
 #pragma once
 #include "ExceptionHandling.hpp"
 #include <unordered_map>
-#include <iostream>
-#define LOG(X) std::cerr<< X << std::endl;
 
 namespace Infector {
 namespace priv {
@@ -20,14 +18,9 @@ class GenericBinding {
 
 public:
 
-	void bind( Y something, TypeInfoP interface){
-		
-		LOG( "a" );
-		
+	void bind( Y something, TypeInfoP interface){		
 		if( found(get(interface)))
 			throwOrBreak< M>();
-		
-		LOG( "b" );
 		
 		bindings.insert( std::pair< std::type_index, Y>
                     ( std::type_index(*interface), something));

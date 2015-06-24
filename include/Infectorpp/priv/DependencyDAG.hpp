@@ -41,7 +41,7 @@ public:
 	DependencyDAG( DependencyDAG * parent);
 	~DependencyDAG() = default;
 	
-private:
+//private:
 
 	void removeDependant( TypeInfoP wired, TypeInfoP abstractDep);
 
@@ -53,8 +53,7 @@ private:
 								ConcreteContainer * container,
 								int HARD_RECURSION_LIMIT);
 								
-	std::pair< std::list<TypeInfoP>, bool >
-		getDependencies( TypeInfoP); 
+	std::list<TypeInfoP> getDependencies( TypeInfoP); 
 	//
 	//when you realize your Typo was "TypO" instead of "TypE" u.u ...
 };
