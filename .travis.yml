@@ -4,9 +4,6 @@ language: cpp
 compiler:  
   - gcc
   - clang
-  
-env:
-  - CMAKE_COMPILER_ALIAS=compiler C_MAKE_CHOOSEN_GENERATOR="Unix Makefiles"
     
 before_install:
   - sudo add-apt-repository ppa:kubuntu-ppa/backports -y
@@ -30,7 +27,7 @@ addons:
 before_script:  
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake .. -DCMAKE_BUILD_TYPE:STRING=release
 
 script: make && make test
 
