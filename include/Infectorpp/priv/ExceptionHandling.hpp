@@ -4,6 +4,7 @@
 *******************************************************************************/
 #pragma once
 #include <exception>
+#include "InfectorAbstractContainer.hpp"
 
 //uncomment following line to disable all TRY / CATCH clauses inside Infectorpp
 
@@ -31,44 +32,48 @@
                  // need a workaround thanks to  wtravisjones for bug report.
     #define INFECTORPP_NOEXCEPT noexcept(true)
 #else
-    #define NOEXCEPT
+    #define INFECTORPP_NOEXCEPT
 #endif
 
+#include <iostream>
 
 namespace Infector{
 namespace priv{
 
 	template< typename M>
 	void throwOrBreak(){
+		std::cout<< "throwOrBreak: " <<typeid(M).name()<<std::endl << " " << &typeid(M);
 		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-			assert(false && M::what());
+			std::cout<< "break" <<std::endl;
+			assert(false && typeid(M).name());
 		#else
+			std::cout<< "throw" <<std::endl;
 			throw M();
 		#endif
 	}
 
-	class RebindEx: public virtual std::exception{
+	class INFECTORPP_API RebindEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCannot bind same interface twice\n";
         }
     };
 
-	class CircularDependencyEx: public virtual std::exception{
+	class INFECTORPP_API CircularDependencyEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCircular Dependency detected\n";
         }
     };
 	
-	class TooDeepRecursionEx: public virtual std::exception{
+	class INFECTORPP_API TooDeepRecursionEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nReached hard recursion limit\n";
         }
     };
 	
-	class NotReachableEx: public virtual std::exception{
+	class INFECTORPP_API NotReachableEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nThis is a infectorpp bug, report it at\n https://github.com/Darelbi/Infectorpp \n";

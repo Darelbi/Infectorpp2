@@ -72,14 +72,15 @@ void ConcreteContainer::wire
 			Dependencies.dependOn( type, deps[i], this);
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING			
+	} catch( CircularDependencyEx & ex){
+		rollbackWire(type);
+		throw ex;
+	
 	} catch( RebindEx & ex){
-    
-        //binding successfull till (i-1)th element then partial for i-th element
         rollbackWire(type);
 		throw ex;
 		
 	} catch( std::exception & ex){
-		
 		rollbackWire(type);
 		throw ex;
 	}
@@ -87,7 +88,6 @@ void ConcreteContainer::wire
 }
 
 void ConcreteContainer::rollbackWire(TypeInfoP type){
-	
 	Dependencies.remove( type);
 	Symbols.remove( type);
 }

@@ -6,8 +6,7 @@
 #include "DependencyDAG.hpp"
 #include "ExceptionHandling.hpp"
 #include <algorithm>    // std::find
-#include <iostream>
-#define LOG(X) {std::cout<< X <<std::endl;}
+
 
 namespace Infector {
 namespace priv {
@@ -18,13 +17,12 @@ DependencyDAG::DependencyDAG( DependencyDAG * p){
 
 void DependencyDAG::setGuard( TypeInfoP g){
 	guard = g;
-	//dependencies[ std::type_index(*g)] = std::list< TypeInfoP>();
 }
 
 void DependencyDAG::dependOn( TypeInfoP wired, TypeInfoP abstractDep,
 									ConcreteContainer * container){
 	addDependency( wired, abstractDep);
-	//addDependant( wired, abstractDep);
+	addDependant( wired, abstractDep);
 	
 	const int HARD_RECURSION_LIMIT = 40; //lower better
 	checkGuardBreaking( wired, container, HARD_RECURSION_LIMIT);
@@ -49,22 +47,23 @@ void DependencyDAG::addDependency( TypeInfoP wired, TypeInfoP abstractDep){
 
 void DependencyDAG::addDependant( TypeInfoP wired, TypeInfoP abstractDep){
 	// An interface is used by XXX concrete types
-	auto  & hashEntry = dependants.insert( 
-										std::make_pair(	std::type_index(*abstractDep),
-														std::list< TypeInfoP>() )/// TODO COME FUNZIONE SOPRA
-										).first->second;
+	auto map_it = dependants.find( std::type_index(*abstractDep));
 	
-	auto edge = std::find (hashEntry.begin(), hashEntry.end(), wired);
+	auto & depList = 
+				(map_it == dependants.end())?
+						(dependants[  std::type_index(*abstractDep)] = std::list< TypeInfoP>()):
+						dependants[  std::type_index(*abstractDep)];
+	
+	auto edge = std::find (depList.begin(), depList.end(), wired);
 
-	if (edge != hashEntry.end())
-		hashEntry.push_back( wired);
+	if (edge == depList.end())
+		depList.push_back( wired);
 }
 
 
 void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 									ConcreteContainer * container,
 									int HARD_RECURSION_LIMIT){
-	LOG("checkGuard");
 	HARD_RECURSION_LIMIT--;
 	if(HARD_RECURSION_LIMIT<=0)
 			throwOrBreak< TooDeepRecursionEx>();
@@ -75,20 +74,17 @@ void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 		auto resolvedType = container->getConcreteFromInterface(interface);
 		if( resolvedType == nullptr)
 			continue;
-
 		if( resolvedType == guard)
 			throwOrBreak< CircularDependencyEx>();
-
 		checkGuardBreaking( resolvedType, container, 
 							HARD_RECURSION_LIMIT);
 	}
 }
 
 std::list<TypeInfoP> DependencyDAG::getDependencies( TypeInfoP concrete){
-	LOG("getDeps");
 	if( dependencies.find( std::type_index(*concrete)) != dependencies.end())
 		return std::list<TypeInfoP>(dependencies[ std::type_index(*concrete)]);
-
+	
 	if(parent == nullptr)
 		return std::list<TypeInfoP>();
 
@@ -96,13 +92,14 @@ std::list<TypeInfoP> DependencyDAG::getDependencies( TypeInfoP concrete){
 }
 
 void DependencyDAG::remove( TypeInfoP wired){
+	
 	auto concrete = dependencies.find( std::type_index(*wired) );
 	if(concrete!=dependencies.end()){
-		
 		for( TypeInfoP abstractDep: concrete->second)
 			removeDependant( wired, abstractDep);
 		
 		dependencies.erase(  std::type_index(*wired));
+		return;
 	}
 	
 	throwOrBreak< NotReachableEx>();

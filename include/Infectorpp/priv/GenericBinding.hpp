@@ -6,6 +6,7 @@
 #include "ExceptionHandling.hpp"
 #include <unordered_map>
 
+
 namespace Infector {
 namespace priv {
 
@@ -28,8 +29,9 @@ public:
 
 	void remove( TypeInfoP interface){
 		auto it = bindings.find( std::type_index(*interface) );
-		if(it!=bindings.end())
+		if(it!=bindings.end()){
 			bindings.erase( it);
+		}
 	}
 
 	typename TypeMap::iterator get( TypeInfoP interface){
