@@ -2,7 +2,6 @@
 *.dll
 *.def
 *.o
-*.txt
 *.bat
 IDEs/
 bin/
