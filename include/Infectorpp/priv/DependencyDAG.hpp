@@ -3,9 +3,10 @@
    See copyright notice in InfectorTraits.hpp
 *******************************************************************************/
 #pragma once
-#include <unordered_map>
 #include <list>
 #include <tuple>
+#include <typeinfo>
+#include <unordered_map>
 
 
 namespace Infector {
