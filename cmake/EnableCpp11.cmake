@@ -1,7 +1,7 @@
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "Clang")
 	add_compile_options( -std=c++11 -Os -O3 -fexceptions )
 endif()
 
-if (MINGW)
+if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "GCC")
   add_compile_options( -std=c++11 -Os -O3 -fexceptions )
 endif()

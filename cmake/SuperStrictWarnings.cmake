@@ -1,4 +1,4 @@
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "Clang")
 	add_compile_options( -Woverloaded-virtual -Wctor-dtor-privacy -Wconversion
                       -Wformat=2 -Winit-self -Winline -Wmissing-include-dirs
                       -Wredundant-decls -Wshadow -Wstack-protector
@@ -11,7 +11,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 					  -Wold-style-cast)
 endif()
 
-if(MINGW)
+if ("$ENV{CMAKE_FORCE_OPTIONS_FOR}" STREQUAL "GCC")
   add_compile_options( -Woverloaded-virtual -Wctor-dtor-privacy -Wconversion
                       -Wformat=2 -Winit-self -Winline -Wmissing-include-dirs
                       -Wredundant-decls -Wshadow -Wstack-protector
