@@ -1,0 +1,120 @@
+Overview:
+
+Each application has (ideally)
+
+-1 SymbolTable
+
+So you ends up with
+
+-1 SymbolTable (you cannot use the table again in another container)
+-1 Container
+
+You can split the Container to create a hierarchy of Containers each one with
+unique bindings and wirings inheriting missing configuration from their parents.
+
+-1 Container Hierarchy (N nodes)  -->> CH
+
+You can use any of your Hierarchy nodes to create the first Context. After that
+the hierarchy and the symbol table becomes locked (you cannot longer do new
+bindings and wirings), but you can still register new instances into contexts
+or spawn new contexts.
+It is suggested you DON'T use the same context among multiple threads
+
+To avoid recursive lookup each Container needs a Page, to avoid excessive
+memory wasting the page is reused from within multiple contexts spawned by
+same CH node.
+
+UNLESS MANUALLY INJECTED: instances belong to only 1 context.
+It is still possible injecting instances from different contexts 
+
+PAGE ==== SYMBOL TABLE => Hashmap<TypeIndexP, void*f (instances*) >
+
+-- VISUAL ASCII REPRESENTATION
+
+================
+At begin:
+================
+
+         +----+
+		 | ST |    SymbolTable
+		 +----+
+		    |    
+			v
+		  /^^^\
+		  | C |    First container
+		  \___/
+		 
+================
+After splitting:
+================		 
+
+		 +----+
+		 | ST |    
+		 +----+
+		    |    
+			v
+		  /^^^\
+		  | C |    First container
+		  \___/
+		      \
+			   \     (split)
+			    \
+				 _|
+					/^^^\
+					| D |    Second container
+					
+					\___/
+					
+
+
+===============================
+Context created (pages compiled, symboltable and hierarchy locked):
+===============================
+
+
+		 ######
+		 | ST |    (now locked)
+		 ######
+		    |    
+			v
+	page1 /^^^\ _ _ _ _ _ _ x [Context1] 
+	o-----| C |    
+		  \___/
+		      \
+			   \     
+			    \
+				 _|
+					/^^^\
+			o-------| D |    
+			page2	\___/
+					
+					
+					
+===============================
+Add some more contexts:
+===============================
+
+
+		 ######
+		 | ST | 
+		 ######
+		    |    
+			v
+		  /^^^\ _ _ _ _ _ _ x 
+	o-----| C |    
+		  \___/
+		      \
+			   \     
+			    \
+				 _|
+					/^^^\
+			o-------| D |    
+				    \___/
+					/	|\
+				   /	| \    (create)
+				  /		|  \
+			     x		|   x
+			[Context2]	|     [Context4]
+						x
+						[Context3]
+					

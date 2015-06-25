@@ -1,0 +1,3 @@
+Headers needs cleanup .. ouch
+
+Consider separating Singletons from components (require more dependency check effort)
