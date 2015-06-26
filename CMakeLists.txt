@@ -18,9 +18,6 @@ set(INFECTORPP2_TARGET_NAME "bin" CACHE STRING
 
 include( AddLibraryType)
 
-set(SHARED_BUILD true BOOL )
-add_library_type( Infectorpp2 SHARED)
-
 set(SHARED_BUILD false )
 add_library_type( libInfectorpp2 STATIC)
 
@@ -40,7 +37,5 @@ add_custom_command(TARGET Infectorpp2 POST_BUILD
 
 enable_testing()
 add_subdirectory( tests)
-enable_testing()
-add_subdirectory( testsDLL)
-	
+
 	

@@ -57,21 +57,10 @@ public:
 //				IMPORT/EXPORT stuff needed for windows users
 //_____________________________________________________________________________
 
-#ifndef INFECTORPP_API
-	#if defined (INFECTORPP_EXPORT)|| defined(INFECTORPP_IMPORT)
-		#ifdef INFECTORPP_EXPORT
-			#define INFECTORPP_API __declspec(dllexport)
-		#else
-			#define INFECTORPP_API __declspec(dllimport)
-		#endif
-	#else
-		#define INFECTORPP_API
-	#endif
-#endif
 
 // Decouple user from most implementations details to reduce compile time
 // and separate "typechecking" from library logic
-ContainerPointer INFECTORPP_API createContainer();
+ContainerPointer createContainer();
 
 } // namespace priv
 } // namespace Infector

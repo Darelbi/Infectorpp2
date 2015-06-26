@@ -4,7 +4,6 @@
 *******************************************************************************/
 #pragma once
 #include <exception>
-#include "InfectorAbstractContainer.hpp"
 
 //uncomment following line to disable all TRY / CATCH clauses inside Infectorpp
 
@@ -52,28 +51,28 @@ namespace priv{
 		#endif
 	}
 
-	class INFECTORPP_API RebindEx: public virtual std::exception{
+	class RebindEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCannot bind same interface twice\n";
         }
     };
 
-	class INFECTORPP_API CircularDependencyEx: public virtual std::exception{
+	class CircularDependencyEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nCircular Dependency detected\n";
         }
     };
 	
-	class INFECTORPP_API TooDeepRecursionEx: public virtual std::exception{
+	class TooDeepRecursionEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nReached hard recursion limit\n";
         }
     };
 	
-	class INFECTORPP_API NotReachableEx: public virtual std::exception{
+	class NotReachableEx: public virtual std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nThis is a infectorpp bug, report it at\n https://github.com/Darelbi/Infectorpp \n";
