@@ -1,6 +1,6 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorTraits.hpp
+   See copyright notice in LICENSE.md
 *******************************************************************************/#include "ConcreteContainer.hpp"
 
 
@@ -101,6 +101,10 @@ ContainerPointer ConcreteContainer::split( ContainerPointer p){
 	return std::move(  std::static_pointer_cast<priv::Container>(
 					std::make_shared<ConcreteContainer>( p, &Dependencies)
 					)  );
+}
+
+ContextPointer ConcreteContainer::createContext(){
+	
 }
 
 TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 

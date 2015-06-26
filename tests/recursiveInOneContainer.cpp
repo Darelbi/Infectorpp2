@@ -66,7 +66,7 @@ int recursiveInOneContainer(int argc,char** argv){
 		ioc2.wire< DependsOnFoo, Shared<Foo> >();
 		assert(false); //test failed
 	}
-	catch(const priv::CircularDependencyEx &ex){
+	catch( const priv::CircularDependencyEx &ex){
 		
 	}
 	catch(...){

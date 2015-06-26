@@ -1,6 +1,6 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorTraits.hpp
+   See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
 #include "InfectorTypes.hpp"
@@ -39,7 +39,10 @@ public:
 						BuildSignature func) override;
 						
 	/** Split the container. */
-	virtual ContainerPointer split( ContainerPointer p) override;
+	ContainerPointer split( ContainerPointer p);
+	
+	/** Create a context (effectively freeze the type hierarchy).*/
+	virtual ContextPointer createContext() override;
 
     /**========================================
                        DETAILS:
@@ -67,7 +70,7 @@ private:
 
 	}
 	
-	void rollbackWire(TypeInfoP p);
+	void rollbackWire( TypeInfoP p);
 	
 	ContainerPointer	Parent = nullptr;
 	TypeBinding			Bindings;

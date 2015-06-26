@@ -1,6 +1,6 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorTraits.hpp
+   See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
 #include "priv/InfectorAbstractContext.hpp"
@@ -90,24 +90,24 @@ public:
                        DETAILS:
     ===========================================*/
 
-
-
     //Context(ContextPointer && context_impl);
     inline ~Context() = default;
-	
-	using ContextPointer = std::shared_ptr<priv::Context>;
+	Context( priv::ContextPointer );
 
 private:
 
-	
-	ContextPointer          context;
-
+	priv::ContextPointer          context;
 
 };
 
+inline Context::Context( priv::ContextPointer p)
+	:context( p){
+	
+}
+
 template< typename Contract>
 void Context::registerInstance( std::shared_ptr<Contract> && inst){
-    //TODO: Implement
+    context->registerInstance( std::static_pointer_cast<void>(inst), &typeid( Contract));
 }
 
 template< typename Contract>

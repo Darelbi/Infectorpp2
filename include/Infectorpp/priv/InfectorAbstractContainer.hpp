@@ -1,11 +1,11 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorTraits.hpp
+   See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
-#include <memory>
 #include <unordered_map>
 #include "InfectorTypes.hpp"
+#include "InfectorAbstractContext.hpp"
 
 
 namespace Infector {
@@ -44,19 +44,18 @@ public:
 	/** Split the container. */
 	virtual ContainerPointer split( ContainerPointer p) = 0;
 	
+	/** Create a context (effectively freeze the type hierarchy).*/
+	virtual ContextPointer createContext() = 0;
 	
-	/** Obtain implementation from interface. */
+	/** Needed by ConcreteContainer to get rid of this I need to let it access derived
+		pointer, possible but require some extra complessity. LATER (do that only
+		as optimization: probably not needed since it is called ONLY at initialization
+		time during application wiring.))*/
 	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) = 0;
-
 	
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Container() = default;
 };
-
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//				IMPORT/EXPORT stuff needed for windows users
-//_____________________________________________________________________________
-
 
 // Decouple user from most implementations details to reduce compile time
 // and separate "typechecking" from library logic

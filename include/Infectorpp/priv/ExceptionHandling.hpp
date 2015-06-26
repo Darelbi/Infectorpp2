@@ -1,6 +1,6 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorTraits.hpp
+   See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
 #include <exception>

@@ -1,11 +1,11 @@
 /*******************************************************************************
    Copyright (C) 2015 Dario Oliveri
-   See copyright notice in InfectorTraits.hpp
+   See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
 #include "InfectorTraits.hpp"
-#include "priv/InfectorAbstractContainer.hpp"
 #include "InfectorContext.hpp"
+#include "priv/InfectorAbstractContainer.hpp"
 
 
 namespace Infector {
@@ -53,7 +53,7 @@ public:
 		or binded ). You can still register and instantiate instances.
 		Each container can spawm multiple contexts and has a unique
 		type binding.*/
-    std::shared_ptr<Context> createContext();
+    Context createContext();
 
 
 
@@ -67,7 +67,7 @@ public:
 
 private:
 
-	Container(priv::ContainerPointer p);
+	Container( priv::ContainerPointer p);
 
     priv::ContainerPointer          container; // Implementation
 };
@@ -125,6 +125,11 @@ void Container::wire(){
 Container Container::splitContainer(){
 	
 	return Container( container->split( container));
+}
+
+Context Container::createContext(){
+	
+	return Context( container->createContext());
 }
 
 } // namespace Infector
