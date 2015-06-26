@@ -5,6 +5,7 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
+#include "InfectorTypes.hpp"
 
 
 namespace Infector {

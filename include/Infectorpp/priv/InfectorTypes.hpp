@@ -4,6 +4,7 @@
 *******************************************************************************/
 #pragma once
 #include <typeinfo>
+#include <typeindex>
 #include <memory>
 
 

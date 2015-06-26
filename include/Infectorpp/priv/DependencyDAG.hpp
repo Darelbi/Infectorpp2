@@ -5,8 +5,8 @@
 #pragma once
 #include <list>
 #include <tuple>
-#include <typeinfo>
 #include <unordered_map>
+#include "InfectorTypes.hpp"
 
 
 namespace Infector {
