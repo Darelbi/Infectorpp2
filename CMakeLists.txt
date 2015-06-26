@@ -30,10 +30,6 @@ include( AddUnityObjectLibrary)
 
 add_unity_object_library( infectorObj)
 
-add_custom_command(TARGET Infectorpp2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Infectorpp2> 
-    "../../build/${INFECTORPP2_TARGET_NAME}/testsDLL/$<TARGET_FILE_NAME:Infectorpp2>"
-)
 
 enable_testing()
 add_subdirectory( tests)
