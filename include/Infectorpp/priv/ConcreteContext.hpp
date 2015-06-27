@@ -30,7 +30,7 @@ public:
 
     /** Creates a new object of given type (any dependency required is lazily
 		created now).*/
-    virtual void * create( TypeInfoP type) override;
+    virtual void * buildComponent( TypeInfoP type) override;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~ConcreteContext() = default;

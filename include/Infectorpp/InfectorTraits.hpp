@@ -91,7 +91,7 @@ struct Unique{
 	using type = T;
     static std::unique_ptr<T> resolve( priv::Context * ctx){
         //return static_cast<T*> (ctx->create(&typeid(T)));  //can return plain pointer now :D
-		return std::unique_ptr<T>(static_cast<T*> (ctx->create(&typeid(T))));
+		return std::unique_ptr<T>(static_cast<T*> (ctx->buildComponent(&typeid(T))));
     }
 };
 

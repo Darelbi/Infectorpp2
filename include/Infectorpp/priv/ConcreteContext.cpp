@@ -22,7 +22,7 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP type){
 	
 }
 
-void * ConcreteContext::create( TypeInfoP type){
+void * ConcreteContext::buildComponent( TypeInfoP type){
 	
 }
 	

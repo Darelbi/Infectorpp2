@@ -40,7 +40,7 @@ public:
     /** Register an object that was already created by someoneelse.
     *   You DON'T need to bind or wire it.*/
     template< typename Contract>
-    void registerInstance( std::shared_ptr<Contract> && inst);
+    void registerInstance( std::shared_ptr<Contract> inst);
 
     /** Get a shared Instance of an object from another Context
         You DON'T need to bind or wire it.*/
@@ -106,22 +106,36 @@ inline Context::Context( priv::ContextPointer p)
 }
 
 template< typename Contract>
-void Context::registerInstance( std::shared_ptr<Contract> && inst){
-    context->registerInstance( std::static_pointer_cast<void>(inst), &typeid( Contract));
+std::unique_ptr<Contract> Context::build(){
+	return std::unique_ptr< Contract>( static_cast<Contract*>( 
+			context->buildComponent( &typeid( Contract))  
+															)
+			);
+}
+
+template< typename Contract>
+std::shared_ptr< Contract> Context::buildSingle(){
+	return std::static_pointer_cast< Contract>( 
+			context->instance( &typeid( Contract)));
+}
+
+template< typename Contract>
+void Context::registerInstance( std::shared_ptr<Contract> inst){
+    context->registerInstance( std::static_pointer_cast<void>( inst), &typeid( Contract));
 }
 
 template< typename Contract>
 void Context::getInstance( std::shared_ptr<Context> & other){
-    auto inst = other.buildSingle< Contract>();
-    registerInstance(inst);
+    auto inst = other->buildSingle< Contract>();
+    registerInstance( inst);
 }
 
 template< typename Func>
 void Context::mockFunctionPointer( Func * toBeMocked, Func newFunc){
     context->mockFunctionAndPushDownRestore(
                 // This cast is permitted, by 5.2.10 (6) so it is not undefined behaviour
-                    reinterpret_cast<priv::FuncP*>(toBeMocked),
-                    reinterpret_cast<priv::FuncP>(newFunc) );
+                    reinterpret_cast<priv::FuncP*>( toBeMocked),
+                    reinterpret_cast<priv::FuncP>( newFunc) );
 }
 
 

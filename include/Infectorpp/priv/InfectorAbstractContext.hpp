@@ -34,7 +34,7 @@ public:
 
     /** Creates a new object of given type (any dependency required is lazily
 		created now).*/
-    virtual void * create( TypeInfoP type) = 0;
+    virtual void * buildComponent( TypeInfoP type) = 0;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Context() = default;
