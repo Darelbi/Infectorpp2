@@ -23,7 +23,7 @@ public:
     /** Bind a concrete type to multiple types. */
     virtual void bindSingleAs( 	TypeInfoP concrete,
 								TypeInfoP * interfaces,
-								UpcastSignature * upcasts,
+								InstanceSignature * upcasts,
 								std::size_t size) override;
 								
 	/** Bind a component to its type registering metainfo. */
@@ -55,6 +55,7 @@ public:
 	using TypeBinding	 	= GenericBinding< RebindEx,
 					std::tuple< TypeInfoP, UpcastSignature, std::size_t> >;
 	using SymbolTable		= GenericBinding< RebindEx, BuildSignature>;
+	using InstanceTable 	= GenericBinding< RebindEx, InstanceSignature>;
 	
 	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) override;
 	
@@ -75,6 +76,7 @@ private:
 	ContainerPointer	Parent = nullptr;
 	TypeBinding			Bindings;
 	SymbolTable			Symbols;
+	InstanceTable		Instances;
 	DependencyDAG		Dependencies;
 };
 

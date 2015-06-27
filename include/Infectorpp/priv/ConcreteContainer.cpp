@@ -20,7 +20,7 @@ ConcreteContainer::ConcreteContainer()
 void ConcreteContainer::bindSingleAs
 (               TypeInfoP concrete,
                 TypeInfoP * interfaces,
-                UpcastSignature * upcasts,
+                InstanceSignature * upcasts,
                 std::size_t size){
 
     std::size_t i = 0; 
@@ -28,7 +28,7 @@ void ConcreteContainer::bindSingleAs
 	INFECTORPP_TRY
 
         for(; i<size; i++){
-			Bindings.bind( std::make_tuple(concrete, upcasts[i], 0), interfaces[i]);
+			Bindings.bind( std::make_tuple(concrete, upcasts[i], 0), interfaces[i]); //TODO :HER E NOT
 			//TODO: swap in DAG an abstract with its concrete?? not needed
 			// but need DAG being able to check concretes from abstracts
 		}

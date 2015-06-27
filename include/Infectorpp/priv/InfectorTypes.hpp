@@ -26,6 +26,7 @@ namespace priv {
     /** Nicer to look at than "returnType(*)(Args)" function pointer */
     using UpcastSignature	= void*(*)(void*);
 	using BuildSignature	= void* (*)( priv::Context* ctx);
+	using InstanceSignature = std::shared_ptr<void> (*)( priv::Context * ctx);
 
 } // namespace priv
 } // namespace Infector

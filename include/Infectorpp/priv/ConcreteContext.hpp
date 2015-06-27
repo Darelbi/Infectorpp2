@@ -5,16 +5,16 @@
 #pragma once
 #include "InfectorTypes.hpp"
 #include "InfectorAbstractContext.hpp"
-#include "GenericBinding.hpp"
 #include "ConcreteContainer.hpp"
 #include "ExceptionHandling.hpp"
+#include <unordered_map>
 
 
 namespace Infector{
 namespace priv{
 	
 class ConcreteContext: public Context{
-	struct SymbolTableEntry{
+	struct InstanceTableEntry{
 		std::size_t				size;
 		BuildSignature			constructor;
 		UpcastSignature			toBaseConversion;
@@ -45,15 +45,15 @@ public:
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~ConcreteContext() = default;
 	
-	using TypeBinding	 	= GenericBinding< NotReachableEx,
-												SymbolTableEntry >;
+	using InstanceTable	 	=  std::unordered_map< std::type_index,
+												InstanceTableEntry >;
 					
 	ConcreteContext(	ConcreteContainer::TypeBinding types,
 						ConcreteContainer::SymbolTable symbols );
 
 private:
 
-	
+	InstanceTable	instances;
 	
 };
 	
