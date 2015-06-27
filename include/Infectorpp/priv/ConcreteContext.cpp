@@ -12,7 +12,7 @@ void ConcreteContext::mockFunctionAndPushDownRestore
 								
 }
 								
-ConcreteContext::registerInstance( std::shared_ptr<void> inst,
+void ConcreteContext::registerInstance( std::shared_ptr<void> inst,
 							TypeInfoP type){
 								
 								

@@ -26,7 +26,7 @@ public:
 	/** Register an instance so that such instance is returned instead of being
 		lazily created for a given type. Note that if an instance of given type
 		is already registerd then the program abort/throw exception.*/
-	virtual registerInstance( std::shared_ptr<void> inst, TypeInfoP type) = 0;
+	virtual void registerInstance( std::shared_ptr<void> inst, TypeInfoP type) = 0;
 
     /** Creates an instance if not already present and return a shared pointer
         to that instance (any dependency required is lazily created now). */
