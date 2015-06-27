@@ -25,6 +25,12 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP type){
 void * ConcreteContext::buildComponent( TypeInfoP type){
 	
 }
+
+ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding types,
+									ConcreteContainer::SymbolTable symbols ){
+
+						
+}
 	
 } // namespace priv
 } // namespace Infector

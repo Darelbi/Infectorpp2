@@ -34,21 +34,27 @@
     #define INFECTORPP_NOEXCEPT
 #endif
 
-#include <iostream>
-
 namespace Infector{
 namespace priv{
 
 	template< typename M>
 	void throwOrBreak(){
-		std::cout<< "throwOrBreak: " <<typeid(M).name()<<std::endl << " " << &typeid(M);
 		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-			std::cout<< "break" <<std::endl;
-			assert(false && typeid(M).name());
+			assert( false && typeid(M).name());
 		#else
-			std::cout<< "throw" <<std::endl;
 			throw M();
 		#endif
+	}
+	
+	template< typename M>
+	void throwingAssertion( bool condition){
+		if(condition==false){
+			#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
+				assert( condition && typeid(M).name());
+			#else
+				throw M();
+			#endif
+		}
 	}
 
 	class RebindEx: public virtual std::exception{

@@ -22,14 +22,18 @@ class DependencyDAG{
 	
 	using EdgeMap = std::unordered_map< std::type_index, 
 										std::list< TypeInfoP> >;
+	using EdgeMapPtr = std::shared_ptr<EdgeMap>;
 
-	EdgeMap 	dependencies;
-	EdgeMap		dependants;
+	EdgeMapPtr 	dependencies 	= std::make_shared<EdgeMap>();
+	EdgeMapPtr	dependants		= std::make_shared<EdgeMap>();
 	
 	TypeInfoP 		guard = nullptr;
 	DependencyDAG*	parent = nullptr;
 
 public:
+
+	DependencyDAG( DependencyDAG * parent);
+	~DependencyDAG();
 	
 	void setGuard( TypeInfoP g);
 	
@@ -39,10 +43,10 @@ public:
 	
 	void remove( TypeInfoP concrete);
 	
-	DependencyDAG( DependencyDAG * parent);
-	~DependencyDAG() = default;
+	/** clean memory used by DAG.*/
+	void clean();
 	
-//private:
+private:
 
 	void removeDependant( TypeInfoP wired, TypeInfoP abstractDep);
 
@@ -55,6 +59,7 @@ public:
 								int HARD_RECURSION_LIMIT);
 								
 	std::list<TypeInfoP> getDependencies( TypeInfoP); 
+	
 	//
 	//when you realize your Typo was "TypO" instead of "TypE" u.u ...
 };

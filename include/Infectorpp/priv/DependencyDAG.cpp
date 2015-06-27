@@ -16,28 +16,35 @@ DependencyDAG::DependencyDAG( DependencyDAG * p){
 	parent = p;
 }
 
+DependencyDAG::~DependencyDAG(){
+	clean();
+}
+
+
 void DependencyDAG::setGuard( TypeInfoP g){
+	throwingAssertion< NotReachableEx>(dependencies !=nullptr);
 	guard = g;
 }
 
 void DependencyDAG::dependOn( TypeInfoP wired, TypeInfoP abstractDep,
 									ConcreteContainer * container){
+	throwingAssertion< NotReachableEx>(dependencies !=nullptr);
+	
 	addDependency( wired, abstractDep);
 	addDependant( wired, abstractDep);
 	
 	const int HARD_RECURSION_LIMIT = 40; //lower better
 	checkGuardBreaking( wired, container, HARD_RECURSION_LIMIT);
-
 }
 
 void DependencyDAG::addDependency( TypeInfoP wired, TypeInfoP abstractDep){
 	// Concrete type has XXX dependencies (interfaces)
-	auto map_it = dependencies.find( std::type_index(*wired));
+	auto map_it = dependencies->find( std::type_index(*wired));
 	
 	auto & depList = 
-				(map_it == dependencies.end())?
-						(dependencies[  std::type_index(*wired)] = std::list< TypeInfoP>()):
-						dependencies[  std::type_index(*wired)];
+				(map_it == dependencies->end())?
+						((*dependencies)[  std::type_index(*wired)] = std::list< TypeInfoP>()):
+						(*dependencies)[  std::type_index(*wired)];
 	
 	auto edge = std::find (depList.begin(), depList.end(), abstractDep);
 
@@ -48,12 +55,12 @@ void DependencyDAG::addDependency( TypeInfoP wired, TypeInfoP abstractDep){
 
 void DependencyDAG::addDependant( TypeInfoP wired, TypeInfoP abstractDep){
 	// An interface is used by XXX concrete types
-	auto map_it = dependants.find( std::type_index(*abstractDep));
+	auto map_it = dependants->find( std::type_index(*abstractDep));
 	
 	auto & depList = 
-				(map_it == dependants.end())?
-						(dependants[  std::type_index(*abstractDep)] = std::list< TypeInfoP>()):
-						dependants[  std::type_index(*abstractDep)];
+				(map_it == dependants->end())?
+						((*dependants)[  std::type_index(*abstractDep)] = std::list< TypeInfoP>()):
+						(*dependants)[  std::type_index(*abstractDep)];
 	
 	auto edge = std::find (depList.begin(), depList.end(), wired);
 
@@ -83,8 +90,8 @@ void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 }
 
 std::list<TypeInfoP> DependencyDAG::getDependencies( TypeInfoP concrete){
-	if( dependencies.find( std::type_index(*concrete)) != dependencies.end())
-		return std::list<TypeInfoP>(dependencies[ std::type_index(*concrete)]);
+	if( dependencies->find( std::type_index(*concrete)) != dependencies->end())
+		return std::list<TypeInfoP>((*dependencies)[ std::type_index(*concrete)]);
 	
 	if(parent == nullptr)
 		return std::list<TypeInfoP>();
@@ -93,13 +100,14 @@ std::list<TypeInfoP> DependencyDAG::getDependencies( TypeInfoP concrete){
 }
 
 void DependencyDAG::remove( TypeInfoP wired){
+	throwingAssertion< NotReachableEx>(dependencies !=nullptr);
 	
-	auto concrete = dependencies.find( std::type_index(*wired) );
-	if(concrete!=dependencies.end()){
+	auto concrete = dependencies->find( std::type_index(*wired) );
+	if(concrete!=dependencies->end()){
 		for( TypeInfoP abstractDep: concrete->second)
 			removeDependant( wired, abstractDep);
 		
-		dependencies.erase(  std::type_index(*wired));
+		dependencies->erase(  std::type_index(*wired));
 		return;
 	}
 	
@@ -107,10 +115,16 @@ void DependencyDAG::remove( TypeInfoP wired){
 }
 
 void DependencyDAG::removeDependant( TypeInfoP wired, TypeInfoP abstractDep){
-	auto & abstract = dependants.find( std::type_index(*abstractDep) )->second;
+	auto & abstract = dependants->find( std::type_index(*abstractDep) )->second;
 	abstract.remove( wired);
 	if(abstract.empty())
-		dependants.erase( std::type_index(*abstractDep));
+		dependants->erase( std::type_index(*abstractDep));
+}
+
+// actually the only way to free the memory held by unordered_map is by destroying the map
+void DependencyDAG::clean(){						// for some funny reason even calling "clear" does not free the memory 
+	dependencies 	= nullptr;		// and even calling "clear" followed by "rehash" leave some bytes allocated
+	dependants		= nullptr;		// so we actually destroy the map to really free all possible memory
 }
 
 

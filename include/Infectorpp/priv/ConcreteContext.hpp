@@ -3,13 +3,23 @@
    See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
+#include "InfectorTypes.hpp"
 #include "InfectorAbstractContext.hpp"
+#include "GenericBinding.hpp"
+#include "ConcreteContainer.hpp"
+#include "ExceptionHandling.hpp"
 
 
 namespace Infector{
 namespace priv{
 	
 class ConcreteContext: public Context{
+	struct SymbolTableEntry{
+		std::size_t				size;
+		BuildSignature			constructor;
+		UpcastSignature			toBaseConversion;
+		std::shared_ptr<void>	instance;
+	};
 public:
 	
 	/** Creates a mock for a global function pointer and push into a stack
@@ -34,6 +44,16 @@ public:
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~ConcreteContext() = default;
+	
+	using TypeBinding	 	= GenericBinding< NotReachableEx,
+												SymbolTableEntry >;
+					
+	ConcreteContext(	ConcreteContainer::TypeBinding types,
+						ConcreteContainer::SymbolTable symbols );
+
+private:
+
+	
 	
 };
 	

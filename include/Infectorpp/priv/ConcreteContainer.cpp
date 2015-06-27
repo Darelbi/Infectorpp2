@@ -2,6 +2,7 @@
    Copyright (C) 2015 Dario Oliveri
    See copyright notice in LICENSE.md
 *******************************************************************************/#include "ConcreteContainer.hpp"
+#include "ConcreteContext.hpp"
 
 
 namespace Infector {
@@ -104,7 +105,10 @@ ContainerPointer ConcreteContainer::split( ContainerPointer p){
 }
 
 ContextPointer ConcreteContainer::createContext(){
+	Parent = nullptr;
+	Dependencies.clean();
 	
+	return std::make_shared<ConcreteContext>(std::move(Bindings),std::move(Symbols));
 }
 
 TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 
