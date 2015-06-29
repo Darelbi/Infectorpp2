@@ -26,7 +26,7 @@ public:
     /** Bind a concrete type to multiple types. */
     virtual void bindSingleAs( 	TypeInfoP concrete,
 								TypeInfoP * interfaces,
-								UpcastSignature * upcasts,
+								SharedUpcastSignature * upcasts,
 								std::size_t size) = 0;
 								
 	/** Bind a component to its type registering metainfo. */
@@ -39,7 +39,8 @@ public:
 	virtual void wire( 	TypeInfoP type, 
 						TypeInfoP * dependencies, 
 						std::size_t size,
-						BuildSignature func) = 0;
+						BuildSignature func,
+						InstanceSignature inst) = 0;
 						
 	/** Split the container. */
 	virtual ContainerPointer split( ContainerPointer p) = 0;

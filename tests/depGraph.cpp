@@ -43,11 +43,11 @@ struct D{
 template< typename T, typename... Contracts>
 void bindSingleAs( ConcreteContainer * p){
 
-    TypeInfoP         types[ sizeof...( Contracts)]
+    priv::TypeInfoP         types[ sizeof...( Contracts)]
                         { &typeid( Contracts)... };
 
-    UpcastSignature upcasts[ sizeof...( Contracts)]
-                        { &upcast< T, Contracts>... };
+    priv::SharedUpcastSignature upcasts[ sizeof...( Contracts)]
+                        { &priv::shared_upcast< T, Contracts>... };
 
     p->bindSingleAs( &typeid(T), types, upcasts, sizeof...( Contracts));
 }

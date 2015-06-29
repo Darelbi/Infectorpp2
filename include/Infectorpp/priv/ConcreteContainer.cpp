@@ -20,7 +20,7 @@ ConcreteContainer::ConcreteContainer()
 void ConcreteContainer::bindSingleAs
 (               TypeInfoP concrete,
                 TypeInfoP * interfaces,
-                InstanceSignature * upcasts,
+                SharedUpcastSignature * upcasts,
                 std::size_t size){
 
     std::size_t i = 0; 
@@ -28,7 +28,7 @@ void ConcreteContainer::bindSingleAs
 	INFECTORPP_TRY
 
         for(; i<size; i++){
-			Bindings.bind( std::make_tuple(concrete, upcasts[i], 0), interfaces[i]); //TODO :HER E NOT
+			Bindings.bind( std::make_tuple( concrete, nullptr, upcasts[i], 0), interfaces[i]); //TODO :HER E NOT
 			//TODO: swap in DAG an abstract with its concrete?? not needed
 			// but need DAG being able to check concretes from abstracts
 		}
@@ -52,7 +52,7 @@ void ConcreteContainer::bindComponent
 				UpcastSignature upcast,
 				std::size_t size){
 
-	Bindings.bind(	std::make_tuple( concrete, upcast, size), 
+	Bindings.bind(	std::make_tuple( concrete, upcast, nullptr, size), 
 						interface);
 	
 }
@@ -61,28 +61,31 @@ void ConcreteContainer::wire
 (						TypeInfoP type, 
 						TypeInfoP * deps, 
 						std::size_t size,
-						BuildSignature func) {
+						BuildSignature func,
+						InstanceSignature inst) {
 							
 	std::size_t i = 0;
 
 	INFECTORPP_TRY
 	  
 		Symbols.bind( func, type);
+		Instances.bind( inst, type);
 		Dependencies.setGuard( type);
+		
         for(; i<size; i++)
 			Dependencies.dependOn( type, deps[i], this);
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING			
 	} catch( CircularDependencyEx & ex){
-		rollbackWire(type);
+		rollbackWire( type);
 		throw ex;
 	
 	} catch( RebindEx & ex){
-        rollbackWire(type);
+        rollbackWire( type);
 		throw ex;
 		
 	} catch( std::exception & ex){
-		rollbackWire(type);
+		rollbackWire( type);
 		throw ex;
 	}
 #endif
@@ -90,6 +93,7 @@ void ConcreteContainer::wire
 
 void ConcreteContainer::rollbackWire(TypeInfoP type){
 	Dependencies.remove( type);
+	Instances.remove( type);
 	Symbols.remove( type);
 }
 
@@ -108,7 +112,7 @@ ContextPointer ConcreteContainer::createContext(){
 	Parent = nullptr;
 	Dependencies.clean();
 	
-	return std::make_shared<ConcreteContext>(std::move(Bindings),std::move(Symbols));
+	return std::make_shared<ConcreteContext>(std::move(Bindings),std::move(Symbols),std::move(Instances));
 }
 
 TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 

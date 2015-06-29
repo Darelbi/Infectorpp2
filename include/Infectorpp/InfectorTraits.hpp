@@ -78,7 +78,7 @@ static void * factoryFunction( priv::Context * ctx){
 
 template< typename Impl, typename... SmartPointers>
 static std::shared_ptr<void> instancesFactoryFunction( priv::Context * ctx){
-    return std::static_pointer_cast<T>( std::make_shared<Impl>(
+    return std::static_pointer_cast<void>( std::make_shared<Impl>(
 	
 					std::forward< typename SmartPointers::pointerType>( 
 				SmartPointers::resolve(ctx))... 

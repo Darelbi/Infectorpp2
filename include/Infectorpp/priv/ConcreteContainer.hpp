@@ -23,7 +23,7 @@ public:
     /** Bind a concrete type to multiple types. */
     virtual void bindSingleAs( 	TypeInfoP concrete,
 								TypeInfoP * interfaces,
-								InstanceSignature * upcasts,
+								SharedUpcastSignature * upcasts,
 								std::size_t size) override;
 								
 	/** Bind a component to its type registering metainfo. */
@@ -36,13 +36,16 @@ public:
     virtual void wire( 	TypeInfoP type, 
 						TypeInfoP * dependencies, 
 						std::size_t size,
-						BuildSignature func) override;
+						BuildSignature func,
+						InstanceSignature inst) override;
 						
 	/** Split the container. */
-	ContainerPointer split( ContainerPointer p);
+	virtual ContainerPointer split( ContainerPointer p) override;
 	
 	/** Create a context (effectively freeze the type hierarchy).*/
 	virtual ContextPointer createContext() override;
+	
+	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) override;
 
     /**========================================
                        DETAILS:
@@ -53,12 +56,10 @@ public:
     virtual ~ConcreteContainer();
 
 	using TypeBinding	 	= GenericBinding< RebindEx,
-					std::tuple< TypeInfoP, UpcastSignature, std::size_t> >;
+					std::tuple< TypeInfoP, UpcastSignature, SharedUpcastSignature, std::size_t> >;
 	using SymbolTable		= GenericBinding< RebindEx, BuildSignature>;
 	using InstanceTable 	= GenericBinding< RebindEx, InstanceSignature>;
-	
-	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) override;
-	
+
 	DependencyDAG * getGraph();
 
 private:

@@ -92,8 +92,8 @@ void Container::bindSingleAs(){
     priv::TypeInfoP         types[ sizeof...( Contracts)]
                         { &typeid( Contracts)... };
 
-    priv::UpcastSignature upcasts[ sizeof...( Contracts)]
-                        { &priv::upcast< T, Contracts>... };
+    priv::SharedUpcastSignature upcasts[ sizeof...( Contracts)]
+                        { &priv::shared_upcast< T, Contracts>... };
 
     container->bindSingleAs( &typeid(T), types, upcasts, sizeof...( Contracts));
 }
@@ -117,7 +117,8 @@ void Container::wire(){
                         { &typeid(typename SmartPointers::type)... };
 						
 	container->wire( &typeid(Impl), types, sizeof...( SmartPointers),
-					&factoryFunction<Impl, SmartPointers...>);
+					 &factoryFunction< Impl, SmartPointers...>,
+					 &instancesFactoryFunction< Impl, SmartPointers...>);
 					
 	//TODO. make pair (upcast, and new concrete instance togheter) (when compile context)
 }

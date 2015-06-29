@@ -16,8 +16,13 @@ namespace priv{
 class ConcreteContext: public Context{
 	struct InstanceTableEntry{
 		std::size_t				size;
+		
 		BuildSignature			constructor;
 		UpcastSignature			toBaseConversion;
+		
+		InstanceSignature		sharedConstructor;
+		SharedUpcastSignature	toSharedBaseConversion;
+		
 		std::shared_ptr<void>	instance;
 	};
 public:
@@ -49,7 +54,8 @@ public:
 												InstanceTableEntry >;
 					
 	ConcreteContext(	ConcreteContainer::TypeBinding types,
-						ConcreteContainer::SymbolTable symbols );
+						ConcreteContainer::SymbolTable symbols,
+						ConcreteContainer::InstanceTable instances);
 
 private:
 

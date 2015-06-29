@@ -27,10 +27,8 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP interface){
 	throwingAssertion<InstantiatingComponentEx>(it.size==0);
 	
 	return 
-		it.instance = std::shared_ptr<void>( 
-										it.toBaseConversion( // USARE INSTANCES_FACTORY_FUNCTION_HERE
-											it.constructor(this)) //TODO: NOOOO!!!! devo poter chiamare il distruttore. Quindi la 
-																// factory function deve creare uno shared_ptr del tipo esatto
+		it.instance =it.toSharedBaseConversion(
+											it.sharedConstructor( this)
 											);
 }
 
@@ -39,7 +37,8 @@ void * ConcreteContext::buildComponent( TypeInfoP type){
 }
 
 ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding types,
-									ConcreteContainer::SymbolTable symbols ){
+									ConcreteContainer::SymbolTable symbols,
+									ConcreteContainer::InstanceTable instas ){
 
 						
 }
