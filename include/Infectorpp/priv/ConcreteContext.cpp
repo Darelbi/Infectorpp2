@@ -33,7 +33,7 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP interface){
 }
 
 void * ConcreteContext::buildComponent( TypeInfoP type){
-	
+	return nullptr;
 }
 
 ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding types,
