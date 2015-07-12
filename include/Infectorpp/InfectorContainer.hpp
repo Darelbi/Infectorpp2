@@ -108,8 +108,12 @@ void Container::wire(){
 
 	isWireable< Impl>(); //compile time test
 
-    priv::TypeInfoP types[ sizeof...( SmartPointers)]
-                        { &typeid(typename SmartPointers::type)... };
+	// -this is to fix a VS bug. Feel free to raise the limit
+	static_assert( sizeof...(SmartPointers) <= 6,
+		"Unable to wire more than 6 dependencies");
+
+	priv::TypeInfoP types[6]
+		{ &typeid(typename SmartPointers::type)... };
 						
 	container->wire( &typeid(Impl), types, sizeof...( SmartPointers),
 					 &factoryFunction< Impl, SmartPointers...>,
