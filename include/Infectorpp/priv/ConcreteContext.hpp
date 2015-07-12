@@ -7,6 +7,7 @@
 #include "InfectorAbstractContext.hpp"
 #include "ConcreteContainer.hpp"
 #include "ExceptionHandling.hpp"
+#include "DependencyDAG.hpp"
 #include <unordered_map>
 
 
@@ -15,15 +16,15 @@ namespace priv{
 	
 class ConcreteContext: public Context{
 	struct InstanceTableEntry{
-		std::size_t				size;
+		std::size_t				size = 0;
 		
-		BuildSignature			constructor;
-		UpcastSignature			toBaseConversion;
+		BuildSignature			constructor = nullptr;
+		UpcastSignature			toBaseConversion = nullptr;
 		
-		InstanceSignature		sharedConstructor;
-		SharedUpcastSignature	toSharedBaseConversion;
+		InstanceSignature		sharedConstructor = nullptr;
+		SharedUpcastSignature	toSharedBaseConversion = nullptr;
 		
-		std::shared_ptr<void>	instance;
+		std::shared_ptr<void>	instance = nullptr;
 	};
 public:
 	
@@ -55,12 +56,13 @@ public:
 					
 	ConcreteContext(	ConcreteContainer::TypeBinding types,
 						ConcreteContainer::SymbolTable symbols,
-						ConcreteContainer::InstanceTable instances);
+						ConcreteContainer::InstanceTable instances,
+						DependencyDAG & dag);
 
 private:
 
-	InstanceTable	instances;
-	
+	InstanceTable			instances;
+	DependencyDAG::EdgeMap	multiples; // instances with multiple interfaces
 };
 	
 } // namespace priv

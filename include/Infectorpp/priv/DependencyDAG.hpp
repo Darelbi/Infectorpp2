@@ -19,16 +19,6 @@ class ConcreteContainer;
 	A Dependency DAG lives in one context only (Context inheritance is resolved
 	by context only by creating a SymbolTable)*/
 class DependencyDAG{
-	
-	using EdgeMap = std::unordered_map< std::type_index, 
-										std::list< TypeInfoP> >;
-	using EdgeMapPtr = std::shared_ptr<EdgeMap>;
-
-	EdgeMapPtr 	dependencies 	= std::make_shared<EdgeMap>();
-	EdgeMapPtr	dependants		= std::make_shared<EdgeMap>();
-	
-	TypeInfoP 		guard = nullptr;
-	DependencyDAG*	parent = nullptr;
 
 public:
 
@@ -46,7 +36,18 @@ public:
 	/** clean memory used by DAG.*/
 	void clean();
 	
+	using EdgeMap = std::unordered_map< std::type_index, 
+										std::list< TypeInfoP> >;
+	
 private:
+
+	using EdgeMapPtr = std::shared_ptr<EdgeMap>;
+
+	EdgeMapPtr 	dependencies 	= std::make_shared<EdgeMap>();
+	EdgeMapPtr	dependants		= std::make_shared<EdgeMap>();
+	
+	TypeInfoP 		guard = nullptr;
+	DependencyDAG*	parent = nullptr;
 
 	void removeDependant( TypeInfoP wired, TypeInfoP abstractDep);
 

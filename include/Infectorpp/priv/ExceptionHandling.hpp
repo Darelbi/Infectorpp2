@@ -28,7 +28,7 @@
 #endif
 
 #ifndef _MSC_VER // Visual studio 2013 still does not support "noexcept"
-                 // need a workaround thanks to  wtravisjones for bug report.
+                 // needs a workaround thanks to  wtravisjones for bug report.
     #define INFECTORPP_NOEXCEPT noexcept(true)
 #else
     #define INFECTORPP_NOEXCEPT
@@ -92,5 +92,26 @@ namespace priv{
 			return "\nThis is a infectorpp bug, report it at\n https://github.com/Darelbi/Infectorpp \n";
         }
     };
+	
+	class TypeNotWiredEx: public std::exception{
+	public:
+		virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nYou trying to build instance or component of a type wich was not wired.\n";
+        }
+    };
+		
+	class InstanceAlreadyRegisteredEx: public std::exception{
+	public:
+		virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nCannot register an instance that was already lazily created..\n";
+        }
+    };
+	
+	class ContainerLockedEx: public std::exception{
+	public:
+		virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nContainer hiearachy can't be modified after context creation.\n";
+        }	
+	};
 }
 }

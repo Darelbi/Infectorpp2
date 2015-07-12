@@ -51,7 +51,10 @@ public:
                        DETAILS:
     ===========================================*/
 
-    ConcreteContainer( priv::ContainerPointer p, DependencyDAG  * d);
+    ConcreteContainer( 	priv::ContainerPointer p, 
+						DependencyDAG  * d, 
+						std::shared_ptr<bool> lock);
+						
 	ConcreteContainer();
     virtual ~ConcreteContainer();
 
@@ -72,13 +75,19 @@ private:
 
 	}
 	
+	void checkLock();
+	
+	void lock();
+	
 	void rollbackWire( TypeInfoP p);
 	
-	ContainerPointer	Parent = nullptr;
-	TypeBinding			Bindings;
-	SymbolTable			Symbols;
-	InstanceTable		Instances;
-	DependencyDAG		Dependencies;
+	std::shared_ptr<bool> bindingLock;
+	
+	ContainerPointer	parent = nullptr;
+	TypeBinding			bindings;
+	SymbolTable			symbols;
+	InstanceTable		instances;
+	DependencyDAG		dependencies;
 };
 
 } // namespace priv

@@ -8,12 +8,15 @@
 namespace Infector {
 namespace priv {
 	
-ConcreteContainer::ConcreteContainer( priv::ContainerPointer p, DependencyDAG  * d)
-	:Parent(p), Dependencies(d)
+ConcreteContainer::ConcreteContainer( 	priv::ContainerPointer p, 
+										DependencyDAG  * d,
+										std::shared_ptr<bool> locker)
+	:parent(p), dependencies(d), bindingLock(locker)
 	{  }
 
 ConcreteContainer::ConcreteContainer()
-	:Parent( nullptr), Dependencies( nullptr){
+	:parent( nullptr), dependencies( nullptr)
+		, bindingLock( std::make_shared<bool>(false)){
 	
 }
 	
@@ -28,7 +31,7 @@ void ConcreteContainer::bindSingleAs
 	INFECTORPP_TRY
 
         for(; i<size; i++){
-			Bindings.bind( std::make_tuple( concrete, nullptr, upcasts[i], 0), interfaces[i]); //TODO :HER E NOT
+			bindings.bind( std::make_tuple( concrete, nullptr, upcasts[i], 0), interfaces[i]); //TODO :HER E NOT
 			//TODO: swap in DAG an abstract with its concrete?? not needed
 			// but need DAG being able to check concretes from abstracts
 		}
@@ -38,7 +41,7 @@ void ConcreteContainer::bindSingleAs
     
         //binding successfull till (i-1)th element then partial for i-th element
 		if( i>0)
-			bindingRollback( Bindings, interfaces, i-1);
+			bindingRollback( bindings, interfaces, i-1);
 		throw ex;
 	}
 #endif
@@ -52,7 +55,7 @@ void ConcreteContainer::bindComponent
 				UpcastSignature upcast,
 				std::size_t size){
 
-	Bindings.bind(	std::make_tuple( concrete, upcast, nullptr, size), 
+	bindings.bind(	std::make_tuple( concrete, upcast, nullptr, size), 
 						interface);
 	
 }
@@ -68,12 +71,12 @@ void ConcreteContainer::wire
 
 	INFECTORPP_TRY
 	  
-		Symbols.bind( func, type);
-		Instances.bind( inst, type);
-		Dependencies.setGuard( type);
+		symbols.bind( func, type);
+		instances.bind( inst, type);
+		dependencies.setGuard( type);
 		
         for(; i<size; i++)
-			Dependencies.dependOn( type, deps[i], this);
+			dependencies.dependOn( type, deps[i], this);
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING			
 	} catch( CircularDependencyEx & ex){
@@ -92,37 +95,56 @@ void ConcreteContainer::wire
 }
 
 void ConcreteContainer::rollbackWire(TypeInfoP type){
-	Dependencies.remove( type);
-	Instances.remove( type);
-	Symbols.remove( type);
+	dependencies.remove( type);
+	instances.remove( type);
+	symbols.remove( type);
 }
 
 DependencyDAG * ConcreteContainer::getGraph(){
-	return &Dependencies;
+	return &dependencies;
 }
 
-ContainerPointer ConcreteContainer::split( ContainerPointer p){
+ContainerPointer ConcreteContainer::split( 	ContainerPointer p){
 	
 	return std::move(  std::static_pointer_cast<priv::Container>(
-					std::make_shared<ConcreteContainer>( p, &Dependencies)
+					std::make_shared<ConcreteContainer>(	p, 
+															&dependencies,
+															bindingLock)
 					)  );
 }
 
+void ConcreteContainer::checkLock(){
+	if((*bindingLock) == true)
+		throwOrBreak<ContainerLockedEx>();
+}
+
+void ConcreteContainer::lock(){
+	(*bindingLock) = true;
+}
+
 ContextPointer ConcreteContainer::createContext(){
-	Parent = nullptr;
-	Dependencies.clean();
+	parent = nullptr;
 	
-	return std::make_shared<ConcreteContext>(std::move(Bindings),std::move(Symbols),std::move(Instances));
+	auto context =  std::make_shared< ConcreteContext>(
+	
+						std::move( bindings),
+						std::move( symbols),
+						std::move( instances),
+						dependencies
+					);
+											
+	dependencies.clean();									
+	return context;
 }
 
 TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 
-	auto concrete = Bindings.get( interface);
+	auto concrete = bindings.get( interface);
 
-	if(	Bindings.found( concrete))
+	if(	bindings.found( concrete))
 		return 	std::get<0>( concrete->second) ;
 
-	return Parent!=nullptr?
-			Parent->getConcreteFromInterface(interface):
+	return parent!=nullptr?
+			parent->getConcreteFromInterface(interface):
 			nullptr;
 }
 

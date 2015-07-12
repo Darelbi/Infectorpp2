@@ -30,6 +30,10 @@ public:
     *   Note that during this phase a circular dependency check is performed.*/
     template< typename Impl, typename... Dependencies>
     void wire();
+	
+	/** Create a context and KILL CONTAINER HIERARCHY (if you need more than one
+	*	context you have to clone it).*/
+	Context createPrototypeContext();
 
     /**========================================
                       ADVANCED USE:
@@ -42,19 +46,10 @@ public:
 		as sort of "preset" but you can make changes in the child (so
 		you can wire and bind different types and constructors)
 
-		The purpose is to allow mocking and to allow reusing part of
-		application configuration minimizing changes needed.
+		The purpose is to allow using a different implementation for 
+		the same interface, and reuse application bindings.
 		*/
     Container splitContainer();
-
-    /** HIERARCHY:
-		Once a context is created from any point of the hierarchy
-		the whole hierarchy becomes locked (cannot longer be splitted
-		or binded ). You can still register and instantiate instances.
-		Each container can spawm multiple contexts and has a unique
-		type binding.*/
-    Context createContext();
-
 
 
     /**========================================
@@ -128,7 +123,7 @@ Container Container::splitContainer(){
 	return Container( container->split( container));
 }
 
-Context Container::createContext(){
+Context Container::createPrototypeContext(){
 	
 	return Context( container->createContext());
 }

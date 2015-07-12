@@ -38,8 +38,33 @@ public:
 		return bindings.find( std::type_index(*interface));
 	}
 	
+	Y getVal( std::type_index idx){
+		return bindings.find( idx)->second;
+	}
+	
 	bool found(typename TypeMap::iterator it){
 		return it != bindings.end();
+	}
+	
+	// forech-able necessary methods.
+	typename TypeMap::iterator begin() { 
+	
+		return bindings.begin(); 
+	}
+	
+    typename TypeMap::const_iterator begin() const {
+
+		return bindings.begin(); 
+	}
+	
+    typename TypeMap::iterator end() { 
+
+		return bindings.end(); 
+	}
+	
+    typename TypeMap::const_iterator end() const {  
+
+		return bindings.end(); 
 	}
 
 	GenericBinding() = default;

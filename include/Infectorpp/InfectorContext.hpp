@@ -19,13 +19,13 @@ public:
         be recursive in parent Containers, but instances are created
         and owned only inside this context.*/
     template< typename Contract>
-    std::unique_ptr<Contract> build();
+    std::unique_ptr< Contract> build();
 
     /** Return existing instance of an object (or create it if none exists)
         Type resolution may be recursive in parent Containers, but instances
         are created and owned only inside this context.*/
     template< typename Contract>
-    std::shared_ptr<Contract> buildSingle();
+    std::shared_ptr< Contract> buildSingle();
 
     /**=====================================================================
                               FOREIGN INSTANCES:
@@ -40,12 +40,12 @@ public:
     /** Register an object that was already created by someoneelse.
     *   You DON'T need to bind or wire it.*/
     template< typename Contract>
-    void registerInstance( std::shared_ptr<Contract> inst);
+    void registerInstance( std::shared_ptr< Contract> inst);
 
     /** Get a shared Instance of an object from another Context
         You DON'T need to bind or wire it.*/
     template< typename Contract>
-    void getInstance( std::shared_ptr<Context> & inst);
+    void getInstance( std::shared_ptr< Context> & inst);
 
 
     /**=====================================================================
@@ -59,12 +59,12 @@ public:
     /** Like build, but returns concrete instance of given contract(interface).
         Usefull when you need to call methods on derived class for testing.*/
     template< typename Contract, typename Impl>
-    std::unique_ptr<Impl> buildAs();
+    std::unique_ptr< Impl> buildAs();
 
     /** Like buildSingle, but returns concrete instance of given contract.
         Usefull when you need to call methods on derived class for testing.*/
     template< typename Contract, typename Impl>
-    std::shared_ptr<Impl> buildSingleAs();
+    std::shared_ptr< Impl> buildSingleAs();
 
     /** Replace a target function pointer with a defined implementation,
         You can mock a function multiple times, all previous function
@@ -77,13 +77,13 @@ public:
         (if any parent Context is present). If you forgot to mock something,
         you would get an exception. ;).*/
     template< typename Contract>
-    std::unique_ptr<Contract> mock();
+    std::unique_ptr< Contract> mock();
 
     /** Like buildSingle, but dependencies are not searched in parent Context
         (if any parent Context is present).If you forgot to mock something,
         you would get an exception. ;).*/
     template< typename Contract>
-    std::shared_ptr<Contract> mockSingle();
+    std::shared_ptr< Contract> mockSingle();
 
 
     /**========================================
@@ -102,12 +102,12 @@ private:
 
 inline Context::Context( priv::ContextPointer p)
 	:context( p){
-	
+
 }
 
 template< typename Contract>
-std::unique_ptr<Contract> Context::build(){
-	return std::unique_ptr< Contract>( static_cast<Contract*>( 
+std::unique_ptr< Contract> Context::build(){
+	return std::unique_ptr< Contract>( static_cast< Contract*>( 
 			context->buildComponent( &typeid( Contract))  
 															)
 			);
@@ -120,12 +120,13 @@ std::shared_ptr< Contract> Context::buildSingle(){
 }
 
 template< typename Contract>
-void Context::registerInstance( std::shared_ptr<Contract> inst){
-    context->registerInstance( std::static_pointer_cast<void>( inst), &typeid( Contract));
+void Context::registerInstance( std::shared_ptr< Contract> inst){
+    context->registerInstance( 	std::static_pointer_cast<void>( inst), 
+								&typeid( Contract));
 }
 
 template< typename Contract>
-void Context::getInstance( std::shared_ptr<Context> & other){
+void Context::getInstance( std::shared_ptr< Context> & other){
     auto inst = other->buildSingle< Contract>();
     registerInstance( inst);
 }
@@ -133,7 +134,7 @@ void Context::getInstance( std::shared_ptr<Context> & other){
 template< typename Func>
 void Context::mockFunctionPointer( Func * toBeMocked, Func newFunc){
     context->mockFunctionAndPushDownRestore(
-                // This cast is permitted, by 5.2.10 (6) so it is not undefined behaviour
+				// Cast is permitted by 5.2.10 (6): no undefined behaviour
                     reinterpret_cast<priv::FuncP*>( toBeMocked),
                     reinterpret_cast<priv::FuncP>( newFunc) );
 }
