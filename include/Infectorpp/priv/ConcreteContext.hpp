@@ -61,6 +61,9 @@ public:
 
 private:
 
+	void collectDependencies(std::type_index & index, DependencyDAG & dag	);
+	void propagate( std::shared_ptr<void> inst, TypeInfoP type);
+
 	InstanceTable			instances;
 	DependencyDAG::EdgeMap	multiples; // instances with multiple interfaces
 };

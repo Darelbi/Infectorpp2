@@ -5,6 +5,7 @@
 #pragma once
 #include <list>
 #include <tuple>
+#include <typeindex>
 #include <unordered_map>
 #include "InfectorTypes.hpp"
 
@@ -39,6 +40,12 @@ public:
 	using EdgeMap = std::unordered_map< std::type_index, 
 										std::list< TypeInfoP> >;
 	
+	std::list<TypeInfoP> getDependencies( TypeInfoP concrete);
+
+	//
+	//when you realize your Typo was "TypO" instead of "TypE" u.u ...
+	std::list<TypeInfoP> getDependencies( std::type_index & concrete);
+	
 private:
 
 	using EdgeMapPtr = std::shared_ptr<EdgeMap>;
@@ -58,11 +65,6 @@ private:
 	void checkGuardBreaking( 	TypeInfoP currentNode,
 								ConcreteContainer * container,
 								int HARD_RECURSION_LIMIT);
-								
-	std::list<TypeInfoP> getDependencies( TypeInfoP); 
-	
-	//
-	//when you realize your Typo was "TypO" instead of "TypE" u.u ...
 };
 	
 

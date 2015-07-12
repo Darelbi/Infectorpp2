@@ -90,8 +90,13 @@ void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 }
 
 std::list<TypeInfoP> DependencyDAG::getDependencies( TypeInfoP concrete){
-	if( dependencies->find( std::type_index(*concrete)) != dependencies->end())
-		return std::list<TypeInfoP>((*dependencies)[ std::type_index(*concrete)]);
+	auto typei =  std::type_index(*concrete);
+	return getDependencies( typei);
+}
+
+std::list<TypeInfoP> DependencyDAG::getDependencies( std::type_index & concrete){
+	if( dependencies->find( concrete) != dependencies->end())
+		return std::list<TypeInfoP>((*dependencies)[ concrete]);
 	
 	if(parent == nullptr)
 		return std::list<TypeInfoP>();
