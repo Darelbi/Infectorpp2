@@ -7,38 +7,31 @@
 #undef NDEBUG
 #include <assert.h>
 
-	
-class sameSharedInterface{
-public:
-	virtual ~sameSharedInterface(){}
-	
-	virtual void aMethod() = 0;
-};
 
-class sameSharedInstance: public sameSharedInterface{
+class sameSharedSelfInstance{
 public:
-	sameSharedInstance(){};
+	sameSharedSelfInstance(){};
 	
-	void aMethod() override{}
+	void aMethod() {}
 };
 
 
-int sameSharedInstancePerRequest(int argc, char**){
+int sameSharedSelfInstancePerRequest(int argc, char**){
 	
 	
 	using namespace Infector;
 	
 	Container ioc;
-	ioc.bindSingleAs< sameSharedInstance, sameSharedInterface>();
+	ioc.bindSingleAsNothing< sameSharedSelfInstance>();
 	
-	ioc.wire<sameSharedInstance>();
+	ioc.wire<sameSharedSelfInstance>();
 
 	auto context = ioc.createPrototypeContext();
 
-	auto instance = context.buildSingle<sameSharedInterface>();
+	auto instance = context.buildSingle<sameSharedSelfInstance>();
 
 	for(int i=0; i<10;i++)
-		assert( instance == context.buildSingle<sameSharedInterface>());
+		assert( instance == context.buildSingle<sameSharedSelfInstance>());
 
 	return 0;
 }
