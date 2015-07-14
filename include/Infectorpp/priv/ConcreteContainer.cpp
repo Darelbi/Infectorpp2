@@ -4,7 +4,6 @@
 *******************************************************************************/#include "ConcreteContainer.hpp"
 #include "ConcreteContext.hpp"
 
-
 namespace Infector {
 namespace priv {
 	
@@ -19,6 +18,45 @@ ConcreteContainer::ConcreteContainer()
 		, bindingLock( std::make_shared<bool>(false)){
 	
 }
+
+std::list<TypeInfoP> ConcreteContainer::getAbstractions( 
+				std::type_index & concrete){
+	if(!abstractions.found(
+				abstractions.get( concrete))
+	)
+		throwOrBreak< NotReachableEx>();
+	
+	return abstractions.get( concrete)->second;
+}
+
+void ConcreteContainer::addAbstraction( TypeInfoP concrete, 
+										TypeInfoP interface){
+		
+	if(!abstractions.found(
+				abstractions.get( concrete))
+	){
+		std::list<TypeInfoP> interfaces;
+		interfaces.push_back(interface);
+		abstractions.bind(interfaces, concrete);
+		return;
+	}
+	
+	auto it = abstractions.get(concrete);
+	it->second.push_back(interface);
+}
+
+void ConcreteContainer::removeAbstractions( TypeInfoP concrete, 
+											TypeInfoP * interface,
+											std::size_t max ){
+	
+	if(!abstractions.found(
+				abstractions.get( concrete))
+	)return;
+	
+	auto list = abstractions.get(concrete);
+	for(std::size_t i = 0; i<=max; i++)
+		list->second.remove( interface[i]);
+}
 	
 void ConcreteContainer::bindSingleAs
 (               TypeInfoP concrete,
@@ -27,21 +65,27 @@ void ConcreteContainer::bindSingleAs
                 std::size_t size){
 
     std::size_t i = 0; 
+	std::size_t j = 0; 
 
 	INFECTORPP_TRY
 
-        for(; i<size; i++){
+        for(; i<size;){
 			bindings.bind( std::make_tuple( concrete, nullptr, upcasts[i], 0), interfaces[i]); //TODO :HER E NOT
-			//TODO: swap in DAG an abstract with its concrete?? not needed
-			// but need DAG being able to check concretes from abstracts
+			i++;
+			addAbstraction( concrete, interfaces[j]);
+			j++;
 		}
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING	
 	} catch( RebindEx & ex){
-    
-        //binding successfull till (i-1)th element then partial for i-th element
-		if( i>0)
-			bindingRollback( bindings, interfaces, i-1);
+        //thrown when binding (bindings.bind()) the i-th element
+		bindingRollback( bindings, interfaces, i);
+		removeAbstractions( concrete, interfaces, j);
+		throw ex;
+		
+	} catch ( std::exception & ex){ //thrown by abstractions or "out of memory"
+		bindingRollback( bindings, interfaces, i);
+		removeAbstractions( concrete, interfaces, j);
 		throw ex;
 	}
 #endif
@@ -54,41 +98,65 @@ void ConcreteContainer::bindComponent
 				TypeInfoP interface,
 				UpcastSignature upcast,
 				std::size_t size){
+					
+	bool bindDone = false;
 
-	bindings.bind(	std::make_tuple( concrete, upcast, nullptr, size), 
-						interface);
+	INFECTORPP_TRY
 	
+		bindings.bind(	std::make_tuple( concrete, upcast, nullptr, size), 
+						interface);
+		bindDone = true;
+		
+		addAbstraction( concrete, interface);
+	
+	#ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING	
+	} catch( RebindEx & ex){
+		if(bindDone)
+			bindings.remove( interface);
+		throw ex;
+		
+	} catch ( std::exception & ex){
+		if(bindDone)
+			bindings.remove( interface);
+		throw ex;
+	}
+	#endif
 }
 
 void ConcreteContainer::wire
-(						TypeInfoP type, 
+(						TypeInfoP concrete, 
 						TypeInfoP * deps, 
-						std::size_t size,
+						std::size_t number,
 						BuildSignature func,
 						InstanceSignature inst) {
 							
+	if(!abstractions.found(
+				abstractions.get( concrete))
+	)
+		throwOrBreak< NotBoundEx>();
+		
 	std::size_t i = 0;
 
 	INFECTORPP_TRY
 	  
-		symbols.bind( func, type);
-		instances.bind( inst, type);
-		dependencies.setGuard( type);
+		symbols.bind( func, concrete);
+		instances.bind( inst, concrete);
+		dependencies.setGuard( concrete);
 		
-        for(; i<size; i++)
-			dependencies.dependOn( type, deps[i], this);
+        for(; i<number; i++)
+			dependencies.dependOn( concrete, deps[i], this);
 		
 #ifndef INFECTORPP_DISABLE_EXCEPTION_HANDLING			
 	} catch( CircularDependencyEx & ex){
-		rollbackWire( type);
+		rollbackWire( concrete);
 		throw ex;
 	
 	} catch( RebindEx & ex){
-        rollbackWire( type);
+        rollbackWire( concrete);
 		throw ex;
 		
 	} catch( std::exception & ex){
-		rollbackWire( type);
+		rollbackWire( concrete);
 		throw ex;
 	}
 #endif
@@ -115,7 +183,7 @@ ContainerPointer ConcreteContainer::split( 	ContainerPointer p){
 
 void ConcreteContainer::checkLock(){
 	if((*bindingLock) == true)
-		throwOrBreak<ContainerLockedEx>();
+		throwOrBreak< ContainerLockedEx>();
 }
 
 void ConcreteContainer::lock(){
@@ -130,14 +198,15 @@ ContextPointer ConcreteContainer::createContext(){
 						std::move( bindings),
 						std::move( symbols),
 						std::move( instances),
-						dependencies
+						dependencies,
+						(*this)
 					);
-											
-	dependencies.clean();									
+
+	dependencies.clean();			
 	return context;
 }
 
-TypeInfoP ConcreteContainer::getConcreteFromInterface( TypeInfoP interface){ 
+TypeInfoP ConcreteContainer::getConcreteFromInterface( std::type_index & interface){ 
 	auto concrete = bindings.get( interface);
 
 	if(	bindings.found( concrete))
@@ -153,8 +222,8 @@ ConcreteContainer::~ConcreteContainer(){
 }
 
 ContainerPointer createContainer(){
-    return std::move(  std::static_pointer_cast<priv::Container>(
-					std::make_shared<ConcreteContainer>()
+    return std::move(  std::static_pointer_cast< priv::Container>(
+					std::make_shared< ConcreteContainer>()
 					)  );
 }
 

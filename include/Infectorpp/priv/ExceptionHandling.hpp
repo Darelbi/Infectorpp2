@@ -89,7 +89,9 @@ namespace priv{
 	class NotReachableEx: public std::exception{
     public:
         virtual const char* what() const INFECTORPP_NOEXCEPT{
-			return "\nThis is a infectorpp bug, report it at\n https://github.com/Darelbi/Infectorpp \n";
+			return "\nThis is for sure a bug, please report it at: \n"
+					"https://github.com/Darelbi/Infectorpp \n"
+					"Make sure to provide code that reproduce the problem";
         }
     };
 	
@@ -111,6 +113,13 @@ namespace priv{
 	public:
 		virtual const char* what() const INFECTORPP_NOEXCEPT{
 			return "\nContainer hiearachy can't be modified after context creation.\n";
+        }	
+	};
+	
+	class NotBoundEx: public std::exception{
+	public:
+		virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "\nCannot wire a type without bindings.\n";
         }	
 	};
 }

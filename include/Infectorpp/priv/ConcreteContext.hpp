@@ -54,15 +54,15 @@ public:
 	using InstanceTable	 	=  std::unordered_map< std::type_index,
 												InstanceTableEntry >;
 					
-	ConcreteContext(	ConcreteContainer::TypeBinding types,
-						ConcreteContainer::SymbolTable symbols,
-						ConcreteContainer::InstanceTable instances,
-						DependencyDAG & dag);
+	ConcreteContext(	ConcreteContainer::TypeBinding && types,
+						ConcreteContainer::SymbolTable && symbols,
+						ConcreteContainer::InstanceTable && instances,
+						DependencyDAG & dag,
+						ConcreteContainer & container);
 
 private:
 
-	void collectDependencies(std::type_index & index, DependencyDAG & dag	);
-	void propagate( std::shared_ptr<void> inst, TypeInfoP type);
+	void propagate( std::shared_ptr<void> inst, std::type_index & type);
 
 	InstanceTable			instances;
 	DependencyDAG::EdgeMap	multiples; // instances with multiple interfaces

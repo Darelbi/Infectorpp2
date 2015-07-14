@@ -11,7 +11,8 @@
 #include "GenericBinding.hpp"
 
 #include <memory>
-#include <tuple>
+#include <tuple>
+#include <list>
 
 namespace Infector {
 namespace priv {
@@ -42,10 +43,15 @@ public:
 	/** Split the container. */
 	virtual ContainerPointer split( ContainerPointer p) override;
 	
-	/** Create a context (effectively freeze the type hierarchy).*/
+	/** Create a context (effectively freeze the container hierarchy).*/
 	virtual ContextPointer createContext() override;
 	
-	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) override;
+	/** Get the current concrete type for an interface (recursive in parent)*/
+	virtual TypeInfoP getConcreteFromInterface( 
+							std::type_index & interface ) override;
+	
+	/** Return abstractions for a concrete type (only in this container)*/
+	std::list<TypeInfoP> getAbstractions( std::type_index & concrete);
 
     /**========================================
                        DETAILS:
@@ -59,9 +65,17 @@ public:
     virtual ~ConcreteContainer();
 
 	using TypeBinding	 	= GenericBinding< RebindEx,
-					std::tuple< TypeInfoP, UpcastSignature, SharedUpcastSignature, std::size_t> >;
+						std::tuple< 
+								TypeInfoP, 
+								UpcastSignature, 
+								SharedUpcastSignature, 
+								std::size_t
+								> 
+							>;
+								
 	using SymbolTable		= GenericBinding< RebindEx, BuildSignature>;
 	using InstanceTable 	= GenericBinding< RebindEx, InstanceSignature>;
+	using Abstractions = GenericBinding< NotReachableEx, std::list<TypeInfoP>>;
 
 	DependencyDAG * getGraph();
 
@@ -81,12 +95,17 @@ private:
 	
 	void rollbackWire( TypeInfoP p);
 	
+	void addAbstraction( TypeInfoP concrete, TypeInfoP interface);
+	
+	void removeAbstractions( TypeInfoP concr, TypeInfoP * interf, std::size_t);
+	
 	std::shared_ptr<bool> bindingLock;
 	
 	ContainerPointer	parent = nullptr;
 	TypeBinding			bindings;
 	SymbolTable			symbols;
 	InstanceTable		instances;
+	Abstractions		abstractions;
 	DependencyDAG		dependencies;
 };
 

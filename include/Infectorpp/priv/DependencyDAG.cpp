@@ -79,7 +79,9 @@ void DependencyDAG::checkGuardBreaking( TypeInfoP currentNode,
 	//check dependencies of a particular wired type.
 	auto result = getDependencies( currentNode);
 	for (auto interface : result){
-		auto resolvedType = container->getConcreteFromInterface(interface);
+		std::type_index interfaceType(*interface);
+		
+		auto resolvedType = container->getConcreteFromInterface(interfaceType);
 		if( resolvedType == nullptr)
 			continue;
 		if( resolvedType == guard)

@@ -6,7 +6,6 @@
 #include "ExceptionHandling.hpp"
 #include <unordered_map>
 
-
 namespace Infector {
 namespace priv {
 
@@ -36,6 +35,10 @@ public:
 
 	typename TypeMap::iterator get( TypeInfoP interface){
 		return bindings.find( std::type_index(*interface));
+	}
+	
+	typename TypeMap::iterator get( std::type_index & interface){
+		return bindings.find( interface);
 	}
 	
 	Y getVal( std::type_index idx){

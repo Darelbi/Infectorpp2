@@ -80,7 +80,7 @@ inline Container::Container( priv::ContainerPointer p)
 }
 
 template< typename T, typename... Contracts>
-void Container::bindSingleAs(){
+inline void Container::bindSingleAs(){
 
     isMultiBase< T, Contracts...>(); //compile time test
 
@@ -94,7 +94,7 @@ void Container::bindSingleAs(){
 }
 
 template< typename T, typename A>
-void Container::bindAs(){
+inline void Container::bindAs(){
 
     isMultiBase< T, A>(); //compile time test // TODO: NO!!! allow bind as nothing
 
@@ -104,7 +104,7 @@ void Container::bindAs(){
 
 
 template< typename Impl, typename... SmartPointers>
-void Container::wire(){
+inline void Container::wire(){
 
 	isWireable< Impl>(); //compile time test
 
@@ -122,12 +122,12 @@ void Container::wire(){
 	//TODO. make pair (upcast, and new concrete instance togheter) (when compile context)
 }
 
-Container Container::splitContainer(){
+inline Container Container::splitContainer(){
 	
 	return Container( container->split( container));
 }
 
-Context Container::createPrototypeContext(){
+inline Context Container::createPrototypeContext(){
 	
 	return Context( container->createContext());
 }

@@ -4,7 +4,6 @@
 *******************************************************************************/
 #pragma once
 #include <list>
-#include <tuple>
 #include <typeindex>
 #include <unordered_map>
 #include "InfectorTypes.hpp"

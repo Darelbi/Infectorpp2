@@ -4,6 +4,7 @@
 *******************************************************************************/
 #pragma once
 #include <unordered_map>
+#include <typeindex>
 #include "InfectorTypes.hpp"
 #include "InfectorAbstractContext.hpp"
 
@@ -52,7 +53,7 @@ public:
 		pointer, possible but require some extra complessity. LATER (do that only
 		as optimization: probably not needed since it is called ONLY at initialization
 		time during application wiring.))*/
-	virtual TypeInfoP getConcreteFromInterface( TypeInfoP interface) = 0;
+	virtual TypeInfoP getConcreteFromInterface( std::type_index & interface) = 0;
 	
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Container() = default;
