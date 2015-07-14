@@ -22,7 +22,7 @@ void isMultiBaseVariadic(){
 template <typename T, typename I, typename... Contracts>
 void isMultiBaseVariadic(){
     static_assert( std::is_abstract< I>::value,
-                    "T must implement an abstract class");
+                    "T must implement an abstract class (forgot '= 0' in method declaration?)");
     static_assert( std::is_base_of< I, T>::value,
                     "I must be base class for T");
 
