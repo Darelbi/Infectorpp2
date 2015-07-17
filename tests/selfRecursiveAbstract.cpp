@@ -16,11 +16,11 @@ class SelfRecursiveAbstract{
 	
 };
 
-class SelfRecursive: public SelfRecursiveAbstract{
+class SelfRecursive2: public SelfRecursiveAbstract{
 	
 	public:
 	
-	SelfRecursive(std::unique_ptr<SelfRecursiveAbstract>){}
+	SelfRecursive2(std::unique_ptr<SelfRecursiveAbstract>){}
 	
 	virtual void method() override{}
 	
@@ -32,11 +32,11 @@ int selfRecursiveAbstract(int argc, char **){
 	
 	Container ioc;
 	
-	ioc.bindAs< SelfRecursive, SelfRecursiveAbstract> ();
+	ioc.bindAs< SelfRecursive2, SelfRecursiveAbstract> ();
 	
 	
 	try{
-		ioc.wire<  SelfRecursive, Unique<SelfRecursiveAbstract> >();
+		ioc.wire<  SelfRecursive2, Unique<SelfRecursiveAbstract> >();
 		assert(false); //test failed
 	}
 	catch( const priv::CircularDependencyEx &ex){
