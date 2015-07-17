@@ -6,7 +6,7 @@
 
 namespace Infector {
 namespace priv {
-	
+
 ConcreteContainer::ConcreteContainer( 	priv::ContainerPointer p, 
 										DependencyDAG  * d,
 										std::shared_ptr<bool> locker)
@@ -16,7 +16,7 @@ ConcreteContainer::ConcreteContainer( 	priv::ContainerPointer p,
 ConcreteContainer::ConcreteContainer()
 	:parent( nullptr), dependencies( nullptr)
 		, bindingLock( std::make_shared<bool>(false)){
-	
+
 }
 
 std::list<TypeInfoP> ConcreteContainer::getAbstractions( 
@@ -25,13 +25,13 @@ std::list<TypeInfoP> ConcreteContainer::getAbstractions(
 				abstractions.get( concrete))
 	)
 		throwOrBreak< NotReachableEx>();
-	
+
 	return abstractions.get( concrete)->second;
 }
 
 void ConcreteContainer::addAbstraction( TypeInfoP concrete, 
 										TypeInfoP interface){
-		
+
 	if(!abstractions.found(
 				abstractions.get( concrete))
 	){
@@ -40,7 +40,7 @@ void ConcreteContainer::addAbstraction( TypeInfoP concrete,
 		abstractions.bind(interfaces, concrete);
 		return;
 	}
-	
+
 	auto it = abstractions.get(concrete);
 	it->second.push_back(interface);
 }
@@ -48,7 +48,7 @@ void ConcreteContainer::addAbstraction( TypeInfoP concrete,
 void ConcreteContainer::removeAbstractions( TypeInfoP concrete, 
 											TypeInfoP * interface,
 											std::size_t max ){
-	
+
 	if(!abstractions.found(
 				abstractions.get( concrete))
 	)return;
