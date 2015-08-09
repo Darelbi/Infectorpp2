@@ -42,9 +42,6 @@ public:
 						std::size_t size,
 						BuildSignature func,
 						InstanceSignature inst) = 0;
-						
-	/** Split the container. */
-	virtual ContainerPointer split( ContainerPointer p) = 0;
 	
 	/** Create a context (effectively freeze the type hierarchy).*/
 	virtual ContextPointer createContext() = 0;

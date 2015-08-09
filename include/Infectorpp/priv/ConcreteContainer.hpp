@@ -39,9 +39,6 @@ public:
 						std::size_t size,
 						BuildSignature func,
 						InstanceSignature inst) override;
-						
-	/** Split the container. */
-	virtual ContainerPointer split( ContainerPointer p) override;
 	
 	/** Create a context (effectively freeze the container hierarchy).*/
 	virtual ContextPointer createContext() override;
@@ -88,20 +85,13 @@ private:
 			binding.remove( interfaces[i]);
 
 	}
-	
-	void checkLock();
-	
-	void lock();
-	
+
 	void rollbackWire( TypeInfoP p);
 	
 	void addAbstraction( TypeInfoP concrete, TypeInfoP interface);
 	
 	void removeAbstractions( TypeInfoP concr, TypeInfoP * interf, std::size_t);
-	
-	std::shared_ptr<bool> bindingLock;
-	
-	ContainerPointer	parent = nullptr;
+
 	TypeBinding			bindings;
 	SymbolTable			symbols;
 	InstanceTable		instances;
