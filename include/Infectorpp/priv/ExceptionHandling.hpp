@@ -40,7 +40,8 @@ namespace priv{
 	template< typename M>
 	void throwOrBreak(){
 		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-			assert( false && typeid(M).name());
+			assert( typeid(M).name() 
+				&& false);
 		#else
 			throw M();
 		#endif
@@ -48,13 +49,8 @@ namespace priv{
 	
 	template< typename M>
 	void throwingAssertion( bool condition){
-		if(condition==false){
-			#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-				assert( condition && typeid(M).name());
-			#else
-				throw M();
-			#endif
-		}
+		if( condition == false)
+			throwOrBreak< M>();
 	}
 	
 	class InstantiatingComponentEx: public std::exception{
@@ -94,6 +90,26 @@ namespace priv{
 					"Make sure to provide code that reproduce the problem";
         }
     };
+	
+	class PartiallyImplementedSharedType: public std::exception{
+	public:
+		virtual const char * what() const INFECTORPP_NOEXCEPT{
+			return "In container you binded a Concrete type as multiple \n"
+					"interfaces, but then you registered an instance for only\n"
+					"a bunch of those interfaces: if you got this exception\n"
+					"is because somewhere on your code it was assumed\n"
+					"those interfaces are still communicating each other\n"
+					"See the wiki for fixing this exception";
+			
+		}
+	};
+	
+	class NotImplementedEx: public std::exception{
+	public:
+		virtual const char* what() const INFECTORPP_NOEXCEPT{
+			return "Not yet implemented!";
+		}
+	};
 	
 	class TypeNotWiredEx: public std::exception{
 	public:
