@@ -47,23 +47,6 @@ public:
 	Context createPrototypeContext();
 
     /**========================================
-                      ADVANCED USE:
-    ===========================================*/
-
-
-
-    /** HIERARCHY:
-		Create a child container from this one. You keep parent container
-		as sort of "preset" but you can make changes in the child (so
-		you can wire and bind different types and constructors)
-
-		The purpose is to allow using a different implementation for 
-		the same interface, and reuse application bindings.
-		*/
-    Container splitContainer();
-
-
-    /**========================================
                        DETAILS:
     ===========================================*/
 
@@ -150,11 +133,6 @@ inline void Container::wire(){
 					 &instancesFactoryFunction< Impl, SmartPointers...>);
 					
 	//TODO. make pair (upcast, and new concrete instance togheter) (when compile context)
-}
-
-inline Container Container::splitContainer(){
-	
-	return Container( container->split( container));
 }
 
 inline Context Container::createPrototypeContext(){
