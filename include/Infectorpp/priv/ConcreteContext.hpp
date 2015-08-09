@@ -8,32 +8,23 @@
 #include "ConcreteContainer.hpp"
 #include "ExceptionHandling.hpp"
 #include "DependencyDAG.hpp"
+#include "InstanceTableEntry.hpp"
 #include <unordered_map>
 
 
 namespace Infector{
 namespace priv{
-	
+
 class ConcreteContext: public Context{
-	struct InstanceTableEntry{
-		std::size_t				size = 0;
-		
-		BuildSignature			constructor = nullptr;
-		UpcastSignature			toBaseConversion = nullptr;
-		
-		InstanceSignature		sharedConstructor = nullptr;
-		SharedUpcastSignature	toSharedBaseConversion = nullptr;
-		
-		std::shared_ptr<void>	instance = nullptr;
-	};
+
 public:
-	
+
 	/** Creates a mock for a global function pointer and push into a stack
         a lambda that restores original function value (the restore stuff
         is useless for simple tests, but may come in handy for complex tests).*/
 	virtual void mockFunctionAndPushDownRestore
                                 ( FuncP * toBeMocked, FuncP newFunc) override;
-									
+
 	/** Register an instance so that such instance is returned instead of being
 		lazily created for a given type. Note that if an instance of given type
 		is already registerd then the program abort/throw exception.*/
@@ -50,15 +41,13 @@ public:
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~ConcreteContext() = default;
-	
-	using InstanceTable	 	=  std::unordered_map< std::type_index,
-												InstanceTableEntry >;
-					
-	ConcreteContext(	ConcreteContainer::TypeBinding && types,
+
+	ConcreteContext( 	ConcreteContainer::TypeBinding && types,
 						ConcreteContainer::SymbolTable && symbols,
-						ConcreteContainer::InstanceTable && instances,
+						ConcreteContainer::InstanceTable && instas,
 						DependencyDAG & dag,
-						ConcreteContainer & container);
+						ConcreteContainer & container
+					);
 
 private:
 
@@ -67,6 +56,6 @@ private:
 	InstanceTable			instances;
 	DependencyDAG::EdgeMap	multiples; // instances with multiple interfaces
 };
-	
+
 } // namespace priv
 } // namespace Infector

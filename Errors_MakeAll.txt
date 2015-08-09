@@ -1,0 +1,12 @@
+In file included from C:\Users\Dario\Documents\GitHub\Infectorpp\build\GCC_510_posix_dwarf\include\Infectorpp\priv\all.cpp:2:0:
+C:/Users/Dario/Documents/GitHub/Infectorpp/include/Infectorpp/priv/ConcreteContainer.cpp:221:6: error: prototype for 'void Infector::priv::ConcreteContainer::resolveDependency(Infector::priv::TypeInfoP, Infector::priv::ConcreteContainer::InstanceTable&)' does not match any in class 'Infector::priv::ConcreteContainer'
+            InstanceTable & table){ 
+      ^
+In file included from C:/Users/Dario/Documents/GitHub/Infectorpp/include/Infectorpp/priv/ConcreteContainer.cpp:5:0,
+                 from C:\Users\Dario\Documents\GitHub\Infectorpp\build\GCC_510_posix_dwarf\include\Infectorpp\priv\all.cpp:2:
+C:/Users/Dario/Documents/GitHub/Infectorpp/include/Infectorpp/priv/ConcreteContainer.hpp:102:7: error: candidate is: void Infector::priv::ConcreteContainer::resolveDependency(Infector::priv::TypeInfoP, Infector::priv::ConcreteContainer::InstanceTable&, Infector::priv::DependencyDAG::EdgeMap&)
+        InstanceTable & table,
+       ^
+mingw32-make[2]: *** [CMakeFiles/infectorObj.dir/include/Infectorpp/priv/all.cpp.obj] Error 1
+mingw32-make[1]: *** [CMakeFiles/infectorObj.dir/all] Error 2
+mingw32-make: *** [all] Error 2

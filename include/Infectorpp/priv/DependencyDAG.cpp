@@ -129,9 +129,11 @@ void DependencyDAG::removeDependant( TypeInfoP wired, TypeInfoP abstractDep){
 }
 
 // actually the only way to free the memory held by unordered_map is by destroying the map
-void DependencyDAG::clean(){						// for some funny reason even calling "clear" does not free the memory 
+
+void DependencyDAG::clean(){		// for some funny reason even calling "clear" does not free the memory 
 	dependencies 	= nullptr;		// and even calling "clear" followed by "rehash" leave some bytes allocated
 	dependants		= nullptr;		// so we actually destroy the map to really free all possible memory
+									// funny how broken stuff get widely adopted into standards.
 }
 
 

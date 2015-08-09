@@ -217,6 +217,14 @@ TypeInfoP ConcreteContainer::getConcreteFromInterface( std::type_index & interfa
 			nullptr;
 }
 
+void ConcreteContainer::resolveDependency( 	TypeInfoP interface,
+											InstanceTable & table){ 
+// will use DAG
+	auto concrete = getConcreteFromInterface( std::type_index(*interface));
+	auto deps = dependencies.getDependencies( concrete);
+
+}
+
 ConcreteContainer::~ConcreteContainer(){
 	
 }
