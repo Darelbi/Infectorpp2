@@ -120,13 +120,21 @@ template< typename Impl, typename... SmartPointers>
 inline void Container::wire(){
 
 	isWireable< Impl>(); //compile time test
+	
+#ifndef _MSC_VER
 
-	// -this is to fix a VS bug. Feel free to raise the limit
-	static_assert( sizeof...(SmartPointers) <= 6,
-		"Unable to wire more than 6 dependencies");
+    // Best solution for GCC and CLANG => minimal executable size.
+	priv::TypeInfoP types[ sizeof...( SmartPointers)]
+                        { &typeid(typename SmartPointers::type)... };
+						
+#else
+	// -this is to fix a VS bug. I manually setted a reasonable high limit
+	static_assert( sizeof...(SmartPointers) <= 8,
+		"Unable to wire more than 8 dependencies");
 
-	priv::TypeInfoP types[6]
+	priv::TypeInfoP types[8]
 		{ &typeid(typename SmartPointers::type)... };
+#endif
 						
 	container->wire( &typeid(Impl), types, sizeof...( SmartPointers),
 					 &factoryFunction< Impl, SmartPointers...>,
