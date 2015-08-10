@@ -1,6 +1,6 @@
 ### Infectorpp (v2) 
 
-[![Build Status](https://travis-ci.org/Darelbi/Infectorpp.svg?branch=master)](https://travis-ci.org/Darelbi/Infectorpp2)
+[![Build Status](https://travis-ci.org/Darelbi/Infectorpp2.svg?branch=master)](https://travis-ci.org/Darelbi/Infectorpp2)
 
 [![Issues](https://img.shields.io/github/issues/Darelbi/Infectorpp2.svg)](https://github.com/Darelbi/Infectorpp2/issues)
 
