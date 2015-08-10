@@ -7,15 +7,9 @@
 namespace Infector {
 namespace priv {
 
-ConcreteContainer::ConcreteContainer( 	priv::ContainerPointer p, 
-										DependencyDAG  * d,
-										std::shared_ptr<bool> locker)
-	:parent(p), dependencies(d), bindingLock(locker)
-	{  }
 
 ConcreteContainer::ConcreteContainer()
-	:parent( nullptr), dependencies( nullptr)
-		, bindingLock( std::make_shared<bool>(false)){
+	:dependencies( nullptr){
 
 }
 
@@ -172,26 +166,7 @@ DependencyDAG * ConcreteContainer::getGraph(){
 	return &dependencies;
 }
 
-ContainerPointer ConcreteContainer::split( 	ContainerPointer p){
-	
-	return std::move(  std::static_pointer_cast<priv::Container>(
-					std::make_shared<ConcreteContainer>(	p, 
-															&dependencies,
-															bindingLock)
-					)  );
-}
-
-void ConcreteContainer::checkLock(){
-	if((*bindingLock) == true)
-		throwOrBreak< ContainerLockedEx>();
-}
-
-void ConcreteContainer::lock(){
-	(*bindingLock) = true;
-}
-
 ContextPointer ConcreteContainer::createContext(){
-	parent = nullptr;
 	
 	auto context =  std::make_shared< ConcreteContext>(
 	
@@ -212,9 +187,7 @@ TypeInfoP ConcreteContainer::getConcreteFromInterface( std::type_index & interfa
 	if(	bindings.found( concrete))
 		return 	std::get<0>( concrete->second) ;
 
-	return parent!=nullptr?
-			parent->getConcreteFromInterface(interface):
-			nullptr;
+	return nullptr;
 }
 
 ConcreteContainer::~ConcreteContainer(){
