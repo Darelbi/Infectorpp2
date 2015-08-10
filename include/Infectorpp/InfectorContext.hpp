@@ -17,7 +17,7 @@ public:
     /** Creates a new object each time is called. Dependencies are automatically
 		resolved.	*/
     template< typename Contract>
-    std::unique_ptr< Contract> build();
+    std::unique_ptr< Contract> build() const;
 
     /** Create a shared instance and register it within the Context.
 		(If a instance already exists it will be returned instead)*/
@@ -56,7 +56,7 @@ public:
     /** Like build, but returns concrete instance of given contract(interface).
         Usefull when you need to call methods on derived class for testing.*/
     template< typename Contract, typename Impl>
-    std::unique_ptr< Impl> buildAs();
+    std::unique_ptr< Impl> buildAs() const;
 
 
     /**========================================
@@ -64,7 +64,7 @@ public:
     ===========================================*/
 
 	template< typename Impl>
-	void registerMultiInstance( std::shared_ptr< Impl> inst);
+	void registerMultiInstance( std::shared_ptr< Impl> inst) const;
 
     //Context(ContextPointer && context_impl);
     inline ~Context() = default;
@@ -102,7 +102,7 @@ void Context::registerInstance( std::shared_ptr< Contract> inst){
 }
 
 template< typename Impl>
-void Context::registerMultiInstance( std::shared_ptr< Impl> inst){
+void Context::registerMultiInstance( std::shared_ptr< Impl> inst) const{
 	// ok empty. Don't remove
 }
 

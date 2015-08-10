@@ -28,11 +28,11 @@ public:
 
     /** Creates a new object of given type (any dependency required is lazily
 		created now).*/
-    virtual void * buildComponent( TypeInfoP interface) = 0;
+    virtual void * buildComponent( TypeInfoP interface) const = 0;
 
 	/** Creates a new object of given type (any dependency required is lazily
 		created now).*/
-    virtual void * buildComponentAs( TypeInfoP concrete) = 0;
+    virtual void * buildComponentAs( TypeInfoP concrete) const = 0;
 
 	/** Fork the context. */
 	virtual ContextPointer fork() const = 0;

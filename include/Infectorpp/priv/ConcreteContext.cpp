@@ -53,7 +53,7 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP interface){
 	return it.instance;
 }
 
-void * ConcreteContext::buildComponent( TypeInfoP interface){
+void * ConcreteContext::buildComponent( TypeInfoP interface) const {
 	auto mapit = instances.find( std::type_index(*interface));
 	throwingAssertion< TypeNotWiredEx>( mapit != instances.end());
 
@@ -73,7 +73,7 @@ void ConcreteContext::propagate( std::shared_ptr<void> inst, std::type_index & t
 				instances[ std::type_index(*element)].instance = inst;
 }
 
-void * ConcreteContext::buildComponentAs( TypeInfoP concrete){
+void * ConcreteContext::buildComponentAs( TypeInfoP concrete) const {
 	
 }
 
