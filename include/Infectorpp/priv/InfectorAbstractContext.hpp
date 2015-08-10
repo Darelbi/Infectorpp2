@@ -16,7 +16,7 @@ namespace priv{
 class Context{
 
 public:
-									
+
 	/** Register an instance so that such instance is returned instead of being
 		lazily created for a given type. Note that if an instance of given type
 		is already registerd then the program abort/throw exception.*/
@@ -28,7 +28,14 @@ public:
 
     /** Creates a new object of given type (any dependency required is lazily
 		created now).*/
-    virtual void * buildComponent( TypeInfoP type) = 0;
+    virtual void * buildComponent( TypeInfoP interface) = 0;
+
+	/** Creates a new object of given type (any dependency required is lazily
+		created now).*/
+    virtual void * buildComponentAs( TypeInfoP concrete) = 0;
+
+	/** Fork the context. */
+	virtual ContextPointer fork() const = 0;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Context() = default;
