@@ -17,12 +17,6 @@ class Context{
 
 public:
 
-    /** Creates a mock for a global function pointer and push into a stack
-        a lambda that restores original function value (the restore stuff
-        is useless for simple tests, but may come in handy for complex tests).*/
-    virtual void mockFunctionAndPushDownRestore
-                                    ( FuncP * toBeMocked, FuncP newFunc) = 0;
-									
 	/** Register an instance so that such instance is returned instead of being
 		lazily created for a given type. Note that if an instance of given type
 		is already registerd then the program abort/throw exception.*/
@@ -34,7 +28,14 @@ public:
 
     /** Creates a new object of given type (any dependency required is lazily
 		created now).*/
-    virtual void * buildComponent( TypeInfoP type) = 0;
+    virtual void * buildComponent( TypeInfoP interface) = 0;
+
+	/** Creates a new object of given type (any dependency required is lazily
+		created now).*/
+    virtual void * buildComponentAs(TypeInfoP interface) = 0;
+
+	/** Fork the context. */
+	virtual ContextPointer fork() const = 0;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~Context() = default;

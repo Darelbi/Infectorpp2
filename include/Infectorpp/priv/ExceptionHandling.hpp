@@ -36,11 +36,15 @@
 
 namespace Infector{
 namespace priv{
+	
+	void logCriticalError(const char * message);
 
 	template< typename M>
 	void throwOrBreak(){
+		
+		logCriticalError(typeid(M).name());
 		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-			assert( false && typeid(M).name());
+			assert( false);
 		#else
 			throw M();
 		#endif
@@ -48,13 +52,8 @@ namespace priv{
 	
 	template< typename M>
 	void throwingAssertion( bool condition){
-		if(condition==false){
-			#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-				assert( condition && typeid(M).name());
-			#else
-				throw M();
-			#endif
-		}
+		if( condition == false)
+			throwOrBreak< M>();
 	}
 	
 	class InstantiatingComponentEx: public std::exception{
@@ -95,6 +94,19 @@ namespace priv{
         }
     };
 	
+	class PartiallyImplementedSharedType: public std::exception{
+	public:
+		virtual const char * what() const INFECTORPP_NOEXCEPT{
+			return "In container you binded a Concrete type as multiple \n"
+					"interfaces, but then you registered an instance for only\n"
+					"a bunch of those interfaces: if you got this exception\n"
+					"is because somewhere on your code it was assumed\n"
+					"those interfaces are still communicating each other\n"
+					"See the wiki for fixing this exception";
+			
+		}
+	};
+	
 	class TypeNotWiredEx: public std::exception{
 	public:
 		virtual const char* what() const INFECTORPP_NOEXCEPT{
@@ -108,13 +120,6 @@ namespace priv{
 			return "\nCannot register an instance that was already lazily created..\n";
         }
     };
-	
-	class ContainerLockedEx: public std::exception{
-	public:
-		virtual const char* what() const INFECTORPP_NOEXCEPT{
-			return "\nContainer hiearachy can't be modified after context creation.\n";
-        }	
-	};
 	
 	class NotBoundEx: public std::exception{
 	public:
