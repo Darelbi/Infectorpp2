@@ -8,3 +8,5 @@ bin/
 build/
 Improvements.txt
 TestRoot.cpp
+/TestsResult.txt
+/Errors_MakeAll.txt
