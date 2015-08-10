@@ -104,13 +104,6 @@ namespace priv{
 		}
 	};
 	
-	class NotImplementedEx: public std::exception{
-	public:
-		virtual const char* what() const INFECTORPP_NOEXCEPT{
-			return "Not yet implemented!";
-		}
-	};
-	
 	class TypeNotWiredEx: public std::exception{
 	public:
 		virtual const char* what() const INFECTORPP_NOEXCEPT{
@@ -124,13 +117,6 @@ namespace priv{
 			return "\nCannot register an instance that was already lazily created..\n";
         }
     };
-	
-	class ContainerLockedEx: public std::exception{
-	public:
-		virtual const char* what() const INFECTORPP_NOEXCEPT{
-			return "\nContainer hiearachy can't be modified after context creation.\n";
-        }	
-	};
 	
 	class NotBoundEx: public std::exception{
 	public:
