@@ -53,7 +53,7 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP interface){
 	return it.instance;
 }
 
-void * ConcreteContext::buildComponent( TypeInfoP interface) const {
+void * ConcreteContext::buildComponent( TypeInfoP interface) {
 	auto mapit = instances.find( std::type_index(*interface));
 	throwingAssertion< TypeNotWiredEx>( mapit != instances.end());
 
@@ -73,12 +73,20 @@ void ConcreteContext::propagate( std::shared_ptr<void> inst, std::type_index & t
 				instances[ std::type_index(*element)].instance = inst;
 }
 
-void * ConcreteContext::buildComponentAs( TypeInfoP concrete) const {
+void * ConcreteContext::buildComponentAs( TypeInfoP interface) {
 	
+	// DO NOT refactor here: in future I could implement a safe check
+	
+	auto mapit = instances.find( std::type_index(*interface));
+	throwingAssertion< TypeNotWiredEx>( mapit != instances.end());
+
+	auto &it = mapit->second;
+	
+	return it.constructor(this);
 }
 
 ContextPointer ConcreteContext::fork() const{
-	
+	return std::make_shared<ConcreteContext>( *this);
 }
 
 ConcreteContext::ConcreteContext( const ConcreteContext & other){
@@ -98,7 +106,6 @@ ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding && types,
 		auto concrete = symbol.first; //type_index
 		auto abstractions = container.getAbstractions( concrete);
 
-		//TODO: how to build dependencies?
 		for( auto interface: abstractions){
 			auto interfaceType = std::type_index(*interface);
 			if( abstractions.size() > 1)

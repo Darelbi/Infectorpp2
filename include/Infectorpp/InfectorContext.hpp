@@ -3,6 +3,7 @@
    See copyright notice in LICENSE.md
 *******************************************************************************/
 #pragma once
+#include "InfectorTraits.hpp"
 #include "priv/InfectorAbstractContext.hpp"
 
 
@@ -17,7 +18,7 @@ public:
     /** Creates a new object each time is called. Dependencies are automatically
 		resolved.	*/
     template< typename Contract>
-    std::unique_ptr< Contract> build() const;
+    std::unique_ptr< Contract> build();
 
     /** Create a shared instance and register it within the Context.
 		(If a instance already exists it will be returned instead)*/
@@ -56,7 +57,7 @@ public:
     /** Like build, but returns concrete instance of given contract(interface).
         Usefull when you need to call methods on derived class for testing.*/
     template< typename Contract, typename Impl>
-    std::unique_ptr< Impl> buildAs() const;
+    std::unique_ptr< Impl> buildAs();
 
 
     /**========================================
@@ -97,13 +98,15 @@ std::shared_ptr< Contract> Context::buildSingle(){
 
 template< typename Contract>
 void Context::registerInstance( std::shared_ptr< Contract> inst){
+	isWireable<Contract>();
+	
     context->registerInstance( 	std::static_pointer_cast<void>( inst),
 								&typeid( Contract));
 }
 
 template< typename Impl>
 void Context::registerMultiInstance( std::shared_ptr< Impl> inst) const{
-	// ok empty. Don't remove
+	isWireable<Impl>();
 }
 
 template< typename Impl, typename Contract, typename... Contracts>
@@ -120,12 +123,20 @@ void Context::getInstanceFrom( std::shared_ptr< Context> & other){
 }
 
 inline Context  Context::forkContext() const{
+	
+	
 	return Context( context->fork());
 }
 
 template< typename Contract, typename Impl>
 std::unique_ptr< Impl> Context::buildAs(){
-	// TODO: simple implementation but not needed now
+	
+	isMultiBase< Impl, Contract>(); // not this is actually not a safe check
+	
+	return std::unique_ptr< Impl>( static_cast< Impl*>(
+		context->buildComponentAs( &typeid(Contract))
+														)
+		);
 }
 
 

@@ -13,6 +13,7 @@
 namespace Infector{
 
 class Container;
+class Context;
 
 template< typename T>
 void isMultiBaseVariadic(){
@@ -37,10 +38,16 @@ void isMultiBase(){
     //prevent service locator antipattern
     static_assert( !std::is_same< T, Infector::Container>::value
                   , "Cannot Inject Infector::Container!");
+				  
+	static_assert( !std::is_same< T, Infector::Context>::value
+                  , "Cannot Inject Infector::Context!");
 
     //prevent service locator antipattern
     static_assert( !std::is_base_of< Infector::Container, T>::value
                   , "Cannot Inject Infector::Container or its subclasses!");
+				  
+	static_assert( !std::is_base_of< Infector::Context, T>::value
+                  , "Cannot Inject Infector::Context or its subclasses!");
 
     static_assert(  sizeof...( Contracts)>0 //if no contracts don't use "bind X As"
                       , " There must be at least 1 interface ");
@@ -54,16 +61,23 @@ void isMultiBase(){
 template< typename T>
 void isWireable(){
         // These tests are not redundant because wiring and binding could happen
-        // in different compile units
-        static_assert( !std::is_same< T, Infector::Container>::value
-                      , "Cannot wire Infector::Container!");
+	// in different compile units
+	static_assert( !std::is_same< T, Infector::Container>::value
+				  , "Cannot wire Infector::Container!");
 
-        //prevent service locator
-        static_assert( !std::is_base_of< Infector::Container, T>::value
-                      , "Cannot wire Infector::Container or its subclasses!");
+			  
+	static_assert( !std::is_same< T, Infector::Context>::value
+			  , "Cannot wire Infector::Context!");
+			  
+	//prevent service locator
+	static_assert( !std::is_base_of< Infector::Container, T>::value
+				  , "Cannot wire Infector::Container or its subclasses!");
+				  
+	static_assert( !std::is_base_of< Infector::Context, T>::value
+                  , "Cannot wire Infector::Context or its subclasses!");
 
-        static_assert(  std::is_destructible<T>::value
-                      , " T must be destructible");
+	static_assert(  std::is_destructible<T>::value
+				  , " T must be destructible");
 }
 
 

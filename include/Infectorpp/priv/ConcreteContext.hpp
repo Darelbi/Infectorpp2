@@ -33,9 +33,9 @@ public:
 
     virtual std::shared_ptr<void> instance( TypeInfoP type) override;
 
-    virtual void * buildComponent( TypeInfoP type) const override;
+    virtual void * buildComponent( TypeInfoP type) override;
 
-	virtual void * buildComponentAs( TypeInfoP concrete) const override;
+	virtual void * buildComponentAs(TypeInfoP interface) override;
 
 	virtual ContextPointer fork() const override;
 
