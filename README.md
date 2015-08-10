@@ -1,8 +1,8 @@
 ## Infectorpp (v2)
-
+Fast & lightweight DependencyInjection Container for C++
 ![InfectorppLogo](https://github.com/Darelbi/Infectorpp2/blob/master/doc/Infectorpp2.png)
 
-Fast & lightweight DependencyInjection Container for C++
+
 [![Build Status](https://travis-ci.org/Darelbi/Infectorpp2.svg?branch=master)](https://travis-ci.org/Darelbi/Infectorpp2)
 [![Issues](https://img.shields.io/github/issues/Darelbi/Infectorpp2.svg)](https://github.com/Darelbi/Infectorpp2/issues)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Darelbi/Infectorpp2/blob/master/LICENSE.md)
