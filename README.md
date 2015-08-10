@@ -1,4 +1,4 @@
-## Infectorpp (v2) ## 
+## Infectorpp (v2)
 a fast & lightweight dependency Injection container for C++
 
 [![Build Status](https://travis-ci.org/Darelbi/Infectorpp2.svg?branch=master)](https://travis-ci.org/Darelbi/Infectorpp2)
