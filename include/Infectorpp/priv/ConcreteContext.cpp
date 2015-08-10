@@ -17,6 +17,7 @@ void ConcreteContext::registerInstance( std::shared_ptr<void> inst,
 	if(mapit == instances.end()){
 		InstanceTableEntry entry;
 		entry.instance = inst;
+		entry.size = 0;
 		instances[std::type_index(*interface)] = entry;
 		return;
 	}
@@ -35,21 +36,18 @@ std::shared_ptr<void> ConcreteContext::instance( TypeInfoP interface){
 	throwingAssertion< TypeNotWiredEx>( mapit != instances.end()); //check only here for missing wire
 																   //because instances could be provided later 
 																   //that remove the need for a pre-emptive check ^^
-
 	auto &it = mapit->second;
 
 	if (it.instance != nullptr)
 		return it.instance;
 
 	throwingAssertion< InstantiatingComponentEx>( it.size==0);
-
 	std::type_index interfaceType(*interface);
 
 	propagate(
 		it.toSharedBaseConversion(
 						it.sharedConstructor( this)
 											), interfaceType);
-
 	return it.instance;
 }
 
