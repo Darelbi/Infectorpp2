@@ -73,6 +73,19 @@ void ConcreteContext::propagate( std::shared_ptr<void> inst, std::type_index & t
 				instances[ std::type_index(*element)].instance = inst;
 }
 
+void * ConcreteContext::buildComponentAs( TypeInfoP concrete){
+	
+}
+
+ContextPointer ConcreteContext::fork() const{
+	
+}
+
+ConcreteContext::ConcreteContext( const ConcreteContext & other){
+	instances = other.instances;
+	multiples = other.multiples;
+}
+
 ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding && types,
 									ConcreteContainer::SymbolTable && symbols,
 									ConcreteContainer::InstanceTable && instas,

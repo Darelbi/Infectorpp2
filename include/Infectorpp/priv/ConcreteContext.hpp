@@ -13,46 +13,45 @@
 
 namespace Infector{
 namespace priv{
-	
+
 class ConcreteContext: public Context{
 	struct InstanceTableEntry{
 		std::size_t				size = 0;
-		
+
 		BuildSignature			constructor = nullptr;
 		UpcastSignature			toBaseConversion = nullptr;
-		
+
 		InstanceSignature		sharedConstructor = nullptr;
 		SharedUpcastSignature	toSharedBaseConversion = nullptr;
-		
+
 		std::shared_ptr<void>	instance = nullptr;
 	};
 public:
-									
-	/** Register an instance so that such instance is returned instead of being
-		lazily created for a given type. Note that if an instance of given type
-		is already registerd then the program abort/throw exception.*/
+
 	virtual void registerInstance( std::shared_ptr<void> inst,
 								TypeInfoP type) override;
 
-    /** Creates an instance if not already present and return a shared pointer
-        to that instance (any dependency required is lazily created now). */
     virtual std::shared_ptr<void> instance( TypeInfoP type) override;
 
-    /** Creates a new object of given type (any dependency required is lazily
-		created now).*/
     virtual void * buildComponent( TypeInfoP type) override;
+
+	virtual void * buildComponentAs( TypeInfoP concrete) override;
+
+	virtual ContextPointer fork() const override;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
     virtual ~ConcreteContext() = default;
-	
+
 	using InstanceTable	 	=  std::unordered_map< std::type_index,
 												InstanceTableEntry >;
-					
+
 	ConcreteContext(	ConcreteContainer::TypeBinding && types,
 						ConcreteContainer::SymbolTable && symbols,
 						ConcreteContainer::InstanceTable && instances,
 						DependencyDAG & dag,
 						ConcreteContainer & container);
+						
+	ConcreteContext( const ConcreteContext & other);
 
 private:
 
@@ -61,6 +60,6 @@ private:
 	InstanceTable			instances;
 	DependencyDAG::EdgeMap	multiples; // instances with multiple interfaces
 };
-	
+
 } // namespace priv
 } // namespace Infector

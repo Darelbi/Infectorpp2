@@ -18,7 +18,7 @@ public:
     *   IMPL will be created and shared within a context.*/
     template< typename Impl, typename... Contracts>
     void bindSingleAs();
-	
+
 	/** This type will be injected using a "std::shared_ptr", only 1 istance of
     *   IMPL will be created and shared within a context as IMPL*/
     template< typename Impl>
@@ -29,7 +29,7 @@ public:
     *   time this type is requested a new instance is created.*/
     template< typename Impl, typename Contract>
     void bindAs();
-	
+
 	/** Declare a type as implementation of 1 interface (Contract).
     *   "std::unique_ptr" will be used to inject instances of this object, each
     *   time this type is requested a new instance is created.*/
@@ -41,8 +41,8 @@ public:
     *   Note that during this phase a circular dependency check is performed.*/
     template< typename Impl, typename... Dependencies>
     void wire();
-	
-	/** Create a context and KILL CONTAINER HIERARCHY (if you need more than one
+
+	/** Create a context and Invalidate this Container
 	*	context you have to clone it).*/
 	Context createPrototypeContext();
 
@@ -51,7 +51,7 @@ public:
     ===========================================*/
 
     Container();
-	
+
 	virtual ~Container() = default;
 
 private:
@@ -70,7 +70,7 @@ inline Container::Container()
 inline Container::Container( priv::ContainerPointer p)
 	:
 	container( p){
-	
+
 }
 
 template< typename T, typename... Contracts>
@@ -89,7 +89,7 @@ inline void Container::bindSingleAs(){
 
 template< typename T>
 inline void Container::bindSingleAsNothing(){
-	
+
 	priv::TypeInfoP         types[ 1]
                         { &typeid( T)};
 
@@ -104,14 +104,14 @@ inline void Container::bindAs(){
 
     isMultiBase< T, A>(); //compile time test // TODO: NO!!! allow bind as nothing
 
-    container->bindComponent( &typeid(T), &typeid(A), 
+    container->bindComponent( &typeid(T), &typeid(A),
 							&priv::upcast< T, A>, sizeof(T));
 }
 
 template< typename T>
 inline void Container::bindAsNothing(){
 
-    container->bindComponent( &typeid(T), &typeid(T), 
+    container->bindComponent( &typeid(T), &typeid(T),
 							&priv::upcast< T, T>, sizeof(T));
 }
 
@@ -120,13 +120,13 @@ template< typename Impl, typename... SmartPointers>
 inline void Container::wire(){
 
 	isWireable< Impl>(); //compile time test
-	
+
 #ifndef _MSC_VER
 
     // Best solution for GCC and CLANG => minimal executable size.
 	priv::TypeInfoP types[ sizeof...( SmartPointers)]
                         { &typeid(typename SmartPointers::type)... };
-						
+
 #else
 	// -this is to fix a VS bug. I manually setted a reasonable high limit
 	static_assert( sizeof...(SmartPointers) <= 8,
@@ -135,17 +135,17 @@ inline void Container::wire(){
 	priv::TypeInfoP types[8]
 		{ &typeid(typename SmartPointers::type)... };
 #endif
-						
+
 	container->wire( &typeid(Impl), types, sizeof...( SmartPointers),
 					 &factoryFunction< Impl, SmartPointers...>,
 					 &instancesFactoryFunction< Impl, SmartPointers...>);
-					
+
 	//TODO. make pair (upcast, and new concrete instance togheter) (when compile context)
 }
 
 inline Context Container::createPrototypeContext(){
-	
-	return Context( container->createContext());
+	auto context = container->createContext();
+	return container.reset(), Context( context);
 }
 
 } // namespace Infector

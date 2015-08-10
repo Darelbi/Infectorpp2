@@ -8,7 +8,7 @@
 
 namespace Infector {
 
-/** A Context holds instances of shared objects of your application. (think it 
+/** A Context holds instances of shared objects of your application. (think it
 	as a singleton for part or for whole your application, but this is not an
 	antipattern because you can still TEST every part of your application). */
 class Context{
@@ -27,7 +27,7 @@ public:
     /** Register a shared Instance for a Contract.*/
     template< typename Contract>
     void registerInstance( std::shared_ptr< Contract> inst);
-	
+
 	/** Register a shared instance for multiple Contracts. (Same as calling
 		registerInstance multiple times, but shorter to write;) )*/
 	template< typename Impl, typename Contract, typename... Contracts>
@@ -37,7 +37,12 @@ public:
 		not asking it directly? (Remove need for hiearchies and make
 		explicit an intent instead of having it implicit)*/
     template< typename Contract>
-    void getInstance( std::shared_ptr< Context> & inst);
+    void getInstanceFrom( std::shared_ptr< Context> & inst);
+
+	/** Creates another context wich is an exact copy of this one.
+		Instances registered BEFORE FORK will be AUTOMATICALLY SHARED
+		in both contexts. */
+	Context forkContext() const;
 
 
     /**=====================================================================
@@ -57,7 +62,7 @@ public:
     /**========================================
                        DETAILS:
     ===========================================*/
-	
+
 	template< typename Impl>
 	void registerMultiInstance( std::shared_ptr< Impl> inst);
 
@@ -78,21 +83,21 @@ inline Context::Context( priv::ContextPointer p)
 
 template< typename Contract>
 std::unique_ptr< Contract> Context::build(){
-	return std::unique_ptr< Contract>( static_cast< Contract*>( 
-			context->buildComponent( &typeid( Contract))  
+	return std::unique_ptr< Contract>( static_cast< Contract*>(
+			context->buildComponent( &typeid( Contract))
 															)
 			);
 }
 
 template< typename Contract>
 std::shared_ptr< Contract> Context::buildSingle(){
-	return std::static_pointer_cast< Contract>( 
+	return std::static_pointer_cast< Contract>(
 			context->instance( &typeid( Contract)));
 }
 
 template< typename Contract>
 void Context::registerInstance( std::shared_ptr< Contract> inst){
-    context->registerInstance( 	std::static_pointer_cast<void>( inst), 
+    context->registerInstance( 	std::static_pointer_cast<void>( inst),
 								&typeid( Contract));
 }
 
@@ -109,9 +114,13 @@ void Context::registerMultiInstance( std::shared_ptr< Impl> inst){
 }
 
 template< typename Contract>
-void Context::getInstance( std::shared_ptr< Context> & other){
+void Context::getInstanceFrom( std::shared_ptr< Context> & other){
     auto inst = other->buildSingle< Contract>();
     registerInstance( inst);
+}
+
+inline Context  Context::forkContext() const{
+	return Context( context->fork());
 }
 
 template< typename Contract, typename Impl>
