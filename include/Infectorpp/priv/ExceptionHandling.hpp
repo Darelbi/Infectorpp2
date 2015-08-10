@@ -4,6 +4,7 @@
 *******************************************************************************/
 #pragma once
 #include <exception>
+#include <typeinfo>
 
 //uncomment following line to disable all TRY / CATCH clauses inside Infectorpp
 
