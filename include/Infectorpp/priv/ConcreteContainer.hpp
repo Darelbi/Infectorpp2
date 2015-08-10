@@ -9,7 +9,6 @@
 #include "InfectorAbstractContext.hpp"
 #include "DependencyDAG.hpp"
 #include "GenericBinding.hpp"
-#include "InstanceTableEntry.hpp"
 
 #include <memory>
 #include <tuple>
@@ -97,10 +96,6 @@ private:
 	void rollbackWire( TypeInfoP p);
 	
 	void addAbstraction( TypeInfoP concrete, TypeInfoP interface);
-	
-	void resolveDependency( TypeInfoP interface, 
-							InstanceTable & table,
-							DependencyDAG::EdgeMap & multiples); // will use DAG
 	
 	void removeAbstractions( TypeInfoP concr, TypeInfoP * interf, std::size_t);
 	

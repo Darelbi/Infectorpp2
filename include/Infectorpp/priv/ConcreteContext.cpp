@@ -80,22 +80,24 @@ void ConcreteContext::propagate( std::shared_ptr<void> inst, std::type_index & t
 ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding && types,
 									ConcreteContainer::SymbolTable && symbols,
 									ConcreteContainer::InstanceTable && instas,
-									DependencyDAG & dag, // not needed here
+									DependencyDAG & dag,
 									ConcreteContainer & container		){
 	
 	for( auto symbol : symbols){
+
+		
 		auto concrete = symbol.first; //type_index
 		auto abstractions = container.getAbstractions( concrete);
-
+		
+		//TODO: how to build dependencies?
 		for( auto interface: abstractions){
 			auto interfaceType = std::type_index(*interface);
 			if( abstractions.size() > 1)
-				multiples[interfaceType] = abstractions; //needed because shared instances have multiple implementations (only in  this container)
+				multiples[interfaceType] = abstractions;
 			
 			auto typeinfo = types.get( interfaceType)->second;
 			InstanceTableEntry entry;
 			
-			// gather needed data and compact it
 			entry.size 				= std::get<3>( typeinfo);
 			entry.constructor 		= symbol.second;
 			entry.toBaseConversion  = std::get<1>( typeinfo);
@@ -105,8 +107,6 @@ ConcreteContext::ConcreteContext(	ConcreteContainer::TypeBinding && types,
 			instances.emplace( std::make_pair( interfaceType, entry));
 		}
 	}
-	
-	//TODO: how to build dependencies?
 	//here memory  of container released only context exists now
 }
 	
