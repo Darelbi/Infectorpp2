@@ -36,12 +36,15 @@
 
 namespace Infector{
 namespace priv{
+	
+	void logCriticalError(const char * message);
 
 	template< typename M>
 	void throwOrBreak(){
+		
+		logCriticalError(typeid(M).name());
 		#ifdef INFECTORPP_DISABLE_EXCEPTION_HANDLING
-			assert( typeid(M).name() 
-				&& false);
+			assert( false);
 		#else
 			throw M();
 		#endif
