@@ -6,7 +6,7 @@ project( Infectorpp2)
 
 #-----------------------------------CONFIGURE---------------------------------
 #-----------------------------------------------------------------------------
-set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include( OutOfSourceBuild)
 include( EnableCpp11)
 include( SuperStrictWarnings)
