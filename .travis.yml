@@ -1,22 +1,69 @@
-# https://travis-ci.org/datagraph/libsparql
+sudo:false
 language: cpp
-compiler:
-  - clang
-  - gcc
-before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get install -qq libyajl-dev libxml2-dev libxqilla-dev
-  - sudo add-apt-repository ppa:kubuntu-ppa/backports -y
-  - sudo apt-get update -qq
-  - sudo apt-get install --only-upgrade cmake
-  - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq libstdc++-4.8-dev; fi
-  # - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8']
+      env: COMPILER=g++-4.8
 
-before_script:  
-  - cmake --version
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9']
+      env: COMPILER=g++-4.9
+
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+      env: COMPILER=g++-5
+
+    - os: linux
+      compiler: clang
+      env: COMPILER=clang++
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5']
+          packages: ['clang-3.5']
+      env: COMPILER=clang++-3.5
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
+          packages: ['clang-3.6']
+      env: COMPILER=clang++-3.6
+
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
+          packages: ['clang-3.7']
+      env: COMPILER=clang++-3.7
+
+    - os: osx
+      compiler: clang
+      env: COMPILER=clang++
+
+before_script: 
+  - $COMPILER --version
+  - cmake --version 
   - mkdir build
   - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE:STRING=release
-
+  - cmake .. -DCMAKE_BUILD_TYPE:STRING=release -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_CC_COMPILER=$COMPILER
+  
 script: make VERBOSE=1 && make test
