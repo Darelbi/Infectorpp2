@@ -10,3 +10,5 @@ Improvements.txt
 TestRoot.cpp
 /TestsResult.txt
 /Errors_MakeAll.txt
+include/Infectorpp/priv/all.cxx
+Errors_Cmake.txt

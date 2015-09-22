@@ -27,8 +27,11 @@ void isMultiBaseVariadic(){
     static_assert( std::is_base_of< I, T>::value,
                     "I must be base class for T");
 
-    static_assert(  std::is_destructible< I>::value
-                      , " I must be destructible");
+// clang miss "std::is_destructible" :/
+#if defined(__GNUC__) || defined(__GNUG__) || defined(_MSC_VER) 
+	static_assert(  std::is_destructible<T>::value
+				  , " T must be destructible");
+#endif
 
     isMultiBaseVariadic< T, Contracts...>();
 }
@@ -52,8 +55,11 @@ void isMultiBase(){
     static_assert(  sizeof...( Contracts)>0 //if no contracts don't use "bind X As"
                       , " There must be at least 1 interface ");
 
-    static_assert(  std::is_destructible< T>::value
-                      , " T must be destructible");
+// clang miss "std::is_destructible" :/
+#if defined(__GNUC__) || defined(__GNUG__) || defined(_MSC_VER) 
+	static_assert(  std::is_destructible<T>::value
+				  , " T must be destructible");
+#endif
 
     isMultiBaseVariadic< T, Contracts...>();
 }
@@ -76,8 +82,11 @@ void isWireable(){
 	static_assert( !std::is_base_of< Infector::Context, T>::value
                   , "Cannot wire Infector::Context or its subclasses!");
 
+// clang miss "std::is_destructible" :/
+#if defined(__GNUC__) || defined(__GNUG__) || defined(_MSC_VER) 
 	static_assert(  std::is_destructible<T>::value
 				  , " T must be destructible");
+#endif
 }
 
 
