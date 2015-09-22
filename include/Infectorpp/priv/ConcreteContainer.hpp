@@ -59,7 +59,7 @@ public:
 						std::shared_ptr<bool> lock);
 						
 	ConcreteContainer();
-    virtual ~ConcreteContainer();
+    ~ConcreteContainer();
 
 	using TypeBinding	 	= GenericBinding< RebindEx,
 						std::tuple< 

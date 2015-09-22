@@ -40,7 +40,7 @@ public:
 	virtual ContextPointer fork() const override;
 
     /** allows calling destructor of derived classes from interfaces pointers.*/
-    virtual ~ConcreteContext() = default;
+    ~ConcreteContext() = default;
 
 	using InstanceTable	 	=  std::unordered_map< std::type_index,
 												InstanceTableEntry >;
