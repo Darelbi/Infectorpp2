@@ -5,9 +5,8 @@ build_script:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 - mkdir build
 - cd build
-- cmake .. -DCMAKE_BUILD_TYPE:STRING=release
-- cmake .. --build ..
+- cmake .. --build .. -DCMAKE_BUILD_TYPE:STRING=release
 
 test_script:
-- dir
-- ctest .. --output-on-failure
+- cd tests
+- ctest . --output-on-failure
