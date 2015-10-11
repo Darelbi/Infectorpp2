@@ -8,6 +8,9 @@ build_script:
 - cmake -G "Visual Studio 14 2015" ..
 - dir
 - cmake --build . --target libInfectorpp2
+- cd tests
+- cmake --build . --target tests
+- cd ..
 - cmake --build . --target RUN_TESTS
 
 test_script:
