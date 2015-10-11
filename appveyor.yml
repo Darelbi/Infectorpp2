@@ -10,6 +10,7 @@ build_script:
 - cmake --build . --target libInfectorpp2
 - cd tests
 - dir
+- cmake --build . --target libInfectorpp2
 
 test_script:
 - dir
