@@ -6,7 +6,7 @@ build_script:
 - mkdir build
 - cd build
 - cmake .. -DCMAKE_BUILD_TYPE:STRING=release
-- cmake .. --build bin/ --config Release
+- cmake .. --build bin/
 
 test_script:
 - ctest .. --output-on-failure
