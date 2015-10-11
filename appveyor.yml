@@ -3,7 +3,10 @@ init: []
 install: []
 build_script:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-- cmake -G "Visual Studio 14 2015" .
+- mkdir build
+- cd build
+- cmake -G "Visual Studio 14 2015" ..
+- cd .. 
 - cmake --build . --target ALL_BUILD --config Release
 
 test_script:
