@@ -6,13 +6,10 @@ build_script:
 - mkdir build
 - cd build
 - cmake -G "Visual Studio 14 2015" ..
-- cmake .. --build .. --target all
+- cmake --build .
 
 test_script:
 - dir
 - cd tests
-- dir
-- cd ..
-- cd ..
 - dir
 - ctest . --output-on-failure
