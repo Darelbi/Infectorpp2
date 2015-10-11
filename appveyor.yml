@@ -9,7 +9,7 @@ build_script:
 - cd ..
 - mkdir bin
 - cd bin
-- cmake .. --build bin/
+- cmake .. --build .
 
 test_script:
 - ctest .. --output-on-failure
