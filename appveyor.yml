@@ -6,6 +6,9 @@ build_script:
 - mkdir build
 - cd build
 - cmake .. -DCMAKE_BUILD_TYPE:STRING=release
+- cd ..
+- mkdir bin
+- cd bin
 - cmake .. --build bin/
 
 test_script:
