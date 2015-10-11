@@ -8,7 +8,7 @@ build_script:
 - cmake .. -DCMAKE_BUILD_TYPE:STRING=release
 - cd ..
 - mkdir bin
-- cmake .. --build bin/
+- cmake . --build .
 
 test_script:
 - ctest .. --output-on-failure
