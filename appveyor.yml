@@ -10,10 +10,6 @@ build_script:
 - cmake --build . --target libInfectorpp2
 - cd tests
 - dir
-- cmake --build . --target ALL_BUILD
 
 test_script:
-- dir
-- cd tests
-- dir
 - ctest . --output-on-failure
