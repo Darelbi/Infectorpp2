@@ -6,9 +6,9 @@ build_script:
 - mkdir build
 - cd build
 - cmake .. --build .. -DCMAKE_BUILD_TYPE:STRING=release
+- msbuild Infectorpp2.sln
+- cd tests
+- msbuild infectorppTests.sln
 
 test_script:
-- dir
-- cd tests
-- dir
 - ctest . --output-on-failure
