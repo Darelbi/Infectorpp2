@@ -15,7 +15,7 @@ public:
 	int method(){return 0;}
 };
 
-int registerInstance(int, char**){
+int registerInstance(int, char** const){
 	
 	using namespace Infector;
 	

@@ -45,7 +45,7 @@ public:
 	void * asC() override { return val==3? this: nullptr; }
 };
 
-int bindSingleAsThree( int argc, char**){
+int bindSingleAsThree( int argc, char** const){
 	
 	using namespace Infector;
 	

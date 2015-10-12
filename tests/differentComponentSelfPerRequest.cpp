@@ -15,7 +15,7 @@ public:
 	void aMethod() {}
 };
 
-int differentComponentSelfPerRequest(int argc, char ** argv){
+int differentComponentSelfPerRequest(int argc, char ** const){
 	
 	using namespace Infector;
 	

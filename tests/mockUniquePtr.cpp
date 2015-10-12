@@ -28,7 +28,7 @@ public:
 
 
 
-int mockUniquePtr(int , char** ){
+int mockUniquePtr(int , char** const ){
 	
 	using namespace Infector;
 	

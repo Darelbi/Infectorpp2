@@ -23,7 +23,7 @@ public:
 };
 
 
-int sameSharedInstancePerRequest(int argc, char**){
+int sameSharedInstancePerRequest(int argc, char** const){
 	
 	
 	using namespace Infector;

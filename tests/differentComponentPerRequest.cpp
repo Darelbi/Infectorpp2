@@ -22,7 +22,7 @@ public:
 	void aMethod() override{}
 };
 
-int differentComponentPerRequest(int argc, char ** argv){
+int differentComponentPerRequest(int argc, char ** const){
 	
 	using namespace Infector;
 	
