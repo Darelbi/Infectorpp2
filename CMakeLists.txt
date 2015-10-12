@@ -153,9 +153,6 @@ enable_testing()
 add_library( libCatch SHARED tests/catch.cxx)
 add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} -V)
 
-set_target_properties( libCatch	PROPERTIES
-								PREFIX ""   )
-
 function(create_test parm) #tests helper function
 
 	get_filename_component( ExeName		${parm} NAME_WE)
