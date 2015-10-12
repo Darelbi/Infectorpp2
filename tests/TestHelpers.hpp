@@ -2,6 +2,10 @@
    Copyright (C) 2015 Dario Oliveri
    See copyright notice in LICENSE.md
 *******************************************************************************/
+#pragma once
+void infectorAssert( const char* code, const char* file, const int line);
+
+#define ASSERT(x)do{if(!(x))infectorAssert(#x,__FILE__,__LINE__);}while(false)
 
 #define ABSTRACT_CLASS( x)  	\
 								\

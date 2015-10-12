@@ -4,8 +4,7 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
+#include "Catch.hpp"
 
 
 class differentComponentSelfInstance{
@@ -15,8 +14,8 @@ public:
 	void aMethod() {}
 };
 
-int differentComponentSelfPerRequest(int argc, char ** const){
-	
+TEST_CASE( "check that built components are different", "[infectorpp2]")
+{
 	using namespace Infector;
 	
 	Container ioc;
@@ -28,12 +27,19 @@ int differentComponentSelfPerRequest(int argc, char ** const){
 	
 	std::unique_ptr<differentComponentSelfInstance> components[10];
 	
-	for(int i=0; i<10;i++)
-		components[i] = context.build<differentComponentSelfInstance>();
-	
-	for(int i=0; i<10;i++)
-		for(int j=0; j<10;j++)
-			if(i!=j)
-				assert( components[i] != components[j]);
-	return 0;
+	SECTION("instantiate 10 components")
+	{
+		for(int i=0; i<10;i++){
+			components[i] = context.build<differentComponentSelfInstance>();
+			REQUIRE(components[i] != nullptr);
+		}
+		
+		SECTION(" check if components are different")
+		{
+			for(int i=0; i<10;i++)
+				for(int j=0; j<10;j++)
+					if(i!=j)
+						REQUIRE( components[i] != components[j]);
+		}
+	}
 }

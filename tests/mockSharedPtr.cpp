@@ -4,10 +4,8 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
+#include "Catch.hpp"
 
-#include "TestHelper.hpp"
 
 class buildSingleAsAbstract{
 	
@@ -35,11 +33,8 @@ public:
 	
 };
 
-
-
-
-int mockSharedPtr(int , char** const ){
-	
+TEST_CASE( "mock shared ptr", "[infectorpp2]")
+{
 	using namespace Infector;
 	
 	Container ioc;
@@ -49,7 +44,5 @@ int mockSharedPtr(int , char** const ){
 	auto inst = std::make_shared<buildSingleAsConcrete>();
 	context.registerMultiInstance<buildSingleAsConcrete,  buildSingleAsAbstract>(inst);
 	auto mocked = context.build<classUsingMockedSharedPtr>(); // MOCKED CLASS SHOULD CALL MOCK METHOD
-	assert(inst->wasMethodCalled()); //VERIFY MOCK METHOD WAS CALLED
-	
-	return 0;	
+	REQUIRE( inst->wasMethodCalled()); //VERIFY MOCK METHOD WAS CALLED
 }

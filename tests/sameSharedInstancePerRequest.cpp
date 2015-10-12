@@ -4,8 +4,7 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
+#include "Catch.hpp"
 
 	
 class sameSharedInterface{
@@ -22,10 +21,8 @@ public:
 	void aMethod() override{}
 };
 
-
-int sameSharedInstancePerRequest(int argc, char** const){
-	
-	
+TEST_CASE( "same shared instance per request", "[infectorpp2]")
+{
 	using namespace Infector;
 	
 	Container ioc;
@@ -38,7 +35,5 @@ int sameSharedInstancePerRequest(int argc, char** const){
 	auto instance = context.buildSingle<sameSharedInterface>();
 
 	for(int i=0; i<10;i++)
-		assert( instance == context.buildSingle<sameSharedInterface>());
-
-	return 0;
+		REQUIRE( instance == context.buildSingle<sameSharedInterface>());
 }

@@ -4,9 +4,7 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
-#include "TestHelper.hpp"
+#include "Catch.hpp"
 
 class SelfRecursive{
 	
@@ -18,26 +16,13 @@ class SelfRecursive{
 	
 };
 
-int selfRecursive(int argc, char ** const){
-	
+TEST_CASE( "self recursive", "[infectorpp2]")
+{	
 	using namespace Infector;
 	
 	Container ioc;
 	
 	ioc.bindAsNothing< SelfRecursive> ();
 	
-	
-	try{
-		ioc.wire<  SelfRecursive, Unique<SelfRecursive> >();
-		assert(false); //test failed
-	}
-	catch( const priv::CircularDependencyEx &ex){
-		
-	}
-	catch(...){
-		assert(false); //test failed
-	}
-	
-	
-	return 0;
+	REQUIRE_THROWS( ioc.wire<  SelfRecursive, Unique< SelfRecursive> >());
 }

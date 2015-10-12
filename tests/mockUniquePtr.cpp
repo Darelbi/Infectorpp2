@@ -4,9 +4,7 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
-#include "TestHelper.hpp"
+#include "Catch.hpp"
 
 class buildAsAbstract{
 	
@@ -27,9 +25,8 @@ public:
 
 
 
-
-int mockUniquePtr(int , char** const ){
-	
+TEST_CASE( "mock unique ptr", "[infectorpp2]")
+{
 	using namespace Infector;
 	
 	Container ioc;
@@ -44,11 +41,6 @@ int mockUniquePtr(int , char** const ){
 	
 	auto concrete = context.buildAs<buildAsAbstract, buildAsConcrete>();
 	
-	//std::unique_ptr<buildAsAbstract> casted = std::move(concrete);
-	
-	assert(concrete->method() ==1);
-	assert(concrete->wasMethodCalled());
-
-	
-	return 0;	
+	REQUIRE(concrete->method() ==1);
+	REQUIRE(concrete->wasMethodCalled());
 }

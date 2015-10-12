@@ -4,8 +4,7 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
+#include "Catch.hpp"
 
 class ServiceA{
 	
@@ -45,8 +44,8 @@ public:
 	void * asC() override { return val==3? this: nullptr; }
 };
 
-int bindSingleAsThree( int argc, char** const){
-	
+TEST_CASE( "bind single service as 3 interfaces", ""[infectorpp2]"")
+{
 	using namespace Infector;
 	
 	Container ioc;
@@ -60,9 +59,14 @@ int bindSingleAsThree( int argc, char** const){
 	auto B = context.buildSingle< ServiceB>();
 	auto C = context.buildSingle< ServiceC>();
 	
-	assert( A->asA() == B->asB());
-	assert( C->asC() == B->asB());
-	assert( A->asA() != nullptr);
-
-	return 0;
+	REQUIRE( A != nullptr);
+	REQUIRE( B != nullptr);
+	REQUIRE( C != nullptr);
+	
+	SECTION(" check return values to see if instantiation is correct")
+	{
+		REQUIRE( A->asA() == B->asB());
+		REQUIRE( C->asC() == B->asB());
+		REQUIRE( A->asA() != nullptr);
+	}
 }
