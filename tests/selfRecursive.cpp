@@ -18,7 +18,7 @@ class SelfRecursive{
 	
 };
 
-int selfRecursive(int argc, char **){
+int selfRecursive(int argc, char ** const){
 	
 	using namespace Infector;
 	

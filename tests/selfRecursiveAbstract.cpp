@@ -26,7 +26,7 @@ class SelfRecursive2: public SelfRecursiveAbstract{
 	
 };
 
-int selfRecursiveAbstract(int argc, char **){
+int selfRecursiveAbstract(int argc, char ** const){
 	
 	using namespace Infector;
 	

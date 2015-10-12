@@ -38,7 +38,7 @@ public:
 
 
 
-int mockSharedPtr(int , char** ){
+int mockSharedPtr(int , char** const ){
 	
 	using namespace Infector;
 	

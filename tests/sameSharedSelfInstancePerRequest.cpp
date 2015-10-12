@@ -16,7 +16,7 @@ public:
 };
 
 
-int sameSharedSelfInstancePerRequest(int argc, char**){
+int sameSharedSelfInstancePerRequest(int argc, char** const){
 	
 	
 	using namespace Infector;
