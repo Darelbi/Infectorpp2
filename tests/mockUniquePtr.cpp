@@ -37,7 +37,7 @@ TEST_CASE( "mock unique ptr", "[infectorpp2]")
 	auto context = ioc.createPrototypeContext();
 	
 	auto abstract = context.build<buildAsAbstract>();
-	assert( abstract->method() == 1);
+	REQUIRE( abstract->method() == 1);
 	
 	auto concrete = context.buildAs<buildAsAbstract, buildAsConcrete>();
 	

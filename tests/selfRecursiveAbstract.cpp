@@ -24,15 +24,20 @@ class SelfRecursive2: public SelfRecursiveAbstract{
 	
 };
 
+namespace{
+	
+	void wire( Infector::Container & ioc){
+		 ioc.wire<  SelfRecursive2, //comma is a problem inside macros
+								Infector::Unique< SelfRecursiveAbstract> >();
+	}
+}
+
 TEST_CASE( "self recursive abstract", "[infectorpp2]")
 {	
-	using namespace Infector;
-	
-	Container ioc;
+	Infector::Container ioc;
 	
 	ioc.bindAs< SelfRecursive2, SelfRecursiveAbstract> ();
 	
-	REQUIRE_THROWS( ioc.wire<  SelfRecursive2, 
-								Unique< SelfRecursiveAbstract> >());
+	REQUIRE_THROWS( wire(ioc));
 
 }
