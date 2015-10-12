@@ -44,7 +44,7 @@ public:
 	void * asC() override { return val==3? this: nullptr; }
 };
 
-TEST_CASE( "bind single service as 3 interfaces", ""[infectorpp2]"")
+TEST_CASE( "bind single service as 3 interfaces", "[infectorpp2]")
 {
 	using namespace Infector;
 	

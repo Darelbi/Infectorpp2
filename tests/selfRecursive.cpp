@@ -16,13 +16,18 @@ class SelfRecursive{
 	
 };
 
+namespace {
+	
+	void wire( Infector::Container & ioc){
+		 ioc.wire<  SelfRecursive, Infector::Unique< SelfRecursive> >();
+	}
+}
+
 TEST_CASE( "self recursive", "[infectorpp2]")
 {	
-	using namespace Infector;
-	
-	Container ioc;
+	Infector::Container ioc;
 	
 	ioc.bindAsNothing< SelfRecursive> ();
 	
-	REQUIRE_THROWS( ioc.wire<  SelfRecursive, Unique< SelfRecursive> >());
+	REQUIRE_THROWS( wire(ioc));
 }
