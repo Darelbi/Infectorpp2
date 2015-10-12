@@ -7,7 +7,4 @@ build_script:
 - cd build
 - cmake -G "Visual Studio 14 2015" ..
 - cmake --build . --target ALL_BUILD --config Release
-- dir
 
-test_script:
-- cmake --build . --target RUN_TESTS --config Release
