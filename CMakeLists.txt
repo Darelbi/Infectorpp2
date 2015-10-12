@@ -187,6 +187,6 @@ endfunction(create_test)
 
 
 file( GLOB INFECTORPP_COMMON_TEST_FILES	"tests/*.cpp")
-foreach( source_file ${BADE_COMMON_TEST_FILES} )
+foreach( source_file ${INFECTORPP_COMMON_TEST_FILES} )
 	create_test( ${source_file} libCatch libInfectorpp2)
 endforeach(source_file)
