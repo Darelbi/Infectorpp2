@@ -4,8 +4,7 @@
 *******************************************************************************/
 #include <InfectorContainer.hpp>
 #include <priv/ExceptionHandling.hpp>
-#undef NDEBUG
-#include <assert.h>
+#include "Catch.hpp"
 
 
 class differentComponentInterface{
@@ -22,8 +21,8 @@ public:
 	void aMethod() override{}
 };
 
-int differentComponentPerRequest(int argc, char ** const){
-	
+TEST_CASE( "check that built abstract components are different", "[infectorpp2]")
+{
 	using namespace Infector;
 	
 	Container ioc;
@@ -35,12 +34,19 @@ int differentComponentPerRequest(int argc, char ** const){
 	
 	std::unique_ptr<differentComponentInterface> components[10];
 	
-	for(int i=0; i<10;i++)
-		components[i] = context.build<differentComponentInterface>();
-	
-	for(int i=0; i<10;i++)
-		for(int j=0; j<10;j++)
-			if(i!=j)
-				assert( components[i] != components[j]);
-	return 0;
+	SECTION("instantiate 10 components")
+	{
+		for(int i=0; i<10;i++){
+			components[i] = context.build<differentComponentInterface>();
+			REQUIRE(components[i] != nullptr);
+		}
+		
+		SECTION(" check if components are different")
+		{
+			for(int i=0; i<10;i++)
+				for(int j=0; j<10;j++)
+					if(i!=j)
+						REQUIRE( components[i] != components[j]);
+		}
+	}
 }

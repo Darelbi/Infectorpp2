@@ -21,9 +21,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   "try console commands (separed by @): mkdir build @ cd build @ cmake-gui ..")
 endif()
 
-set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
-
 #==============================================================================
 # Use the following options to customize the build
 #==============================================================================
@@ -38,6 +35,14 @@ set( INFECTORPP2_UNITY_BUILD true CACHE BOOL
 	
 set( INFECTORPP2_ENABLE_PROFILING false CACHE BOOL
 	"choose TRUE if you want to compile using the native profiler")
+	
+	
+set( INFECTORPP2_ENABLE_TESTS true CACHE BOOL
+	"choose TRUE if you want to compile also tests")
+	
+	
+set( INFECTORPP2_ENABLE_EXCEPTIONS true CACHE BOOL
+	"choose TRUE if you want to get exceptions instead of application crash")
 
 
 #==============================================================================
@@ -68,6 +73,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	
 endif()
 
+if(NOT ${INFECTORPP2_ENABLE_EXCEPTIONS})
+	add_definitions(-DINFECTORPP_DISABLE_EXCEPTION_HANDLING=1)
+endif()
 
 #==============================================================================
 # Add source files to static library
@@ -135,5 +143,50 @@ add_custom_command(TARGET libInfectorpp2 POST_BUILD
 # Preparation for Unit testing.
 #==============================================================================
 
+if(NOT ${INFECTORPP2_ENABLE_TESTS})
+	return()
+endif()
+
+
+
 enable_testing()
-add_subdirectory( tests)
+add_library( libCatch SHARED tests/catch.cxx)
+add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} -V)
+
+set_target_properties( libCatch	PROPERTIES
+								PREFIX ""   )
+
+function(create_test parm) #tests helper function
+
+	get_filename_component( ExeName		${parm} NAME_WE)
+	get_filename_component( SourceFile	${parm} ABSOLUTE)
+
+	add_executable( ${ExeName} ${SourceFile})
+
+	# ARGN is list of arguments past "parm". So all libraries that we link
+	target_link_libraries( ${ExeName} ${ARGN})
+
+
+	add_dependencies( build_and_test ${ExeName})
+
+	target_include_directories( ${ExeName} PUBLIC "include/Infectorpp")
+
+	add_test( ${ExeName} ${ExeName})
+
+	add_custom_command(TARGET ${ExeName}
+					   POST_BUILD
+					   COMMAND ${ExeName}
+					   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+					   COMMENT "Running ${ExeName}" VERBATIM)
+endfunction(create_test)
+
+
+#==============================================================================
+# Unit testing and compile demos
+#==============================================================================
+
+
+file( GLOB INFECTORPP_COMMON_TEST_FILES	"tests/*.cpp")
+foreach( source_file ${BADE_COMMON_TEST_FILES} )
+	create_test( ${source_file} libCatch libInfectorpp2)
+endforeach(source_file)
