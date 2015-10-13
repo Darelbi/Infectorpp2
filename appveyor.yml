@@ -13,7 +13,9 @@ build_script:
 - dir
 - cd ..
 - cd Win32
+- cd Release
 - dir
+- cd ..
 - cd ..
 
 
