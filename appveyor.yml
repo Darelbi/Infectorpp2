@@ -9,5 +9,11 @@ build_script:
 - dir
 - cmake --build . --target ALL_BUILD --config Release
 - dir
+- cd Release
+- dir
+- cd ..
+- cd Win32
+- dir
+- cd ..
 
 
