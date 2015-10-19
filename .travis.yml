@@ -6,48 +6,48 @@ matrix:
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.8']
+          sources: ['ubuntu-toolchain-r-test', 'kalakris-cmake']
+          packages: ['g++-4.8', 'cmake']
       env: COMPILER=g++-4.8
 
     - os: linux
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9']
+          sources: ['ubuntu-toolchain-r-test', 'kalakris-cmake']
+          packages: ['g++-4.9', 'cmake']
       env: COMPILER=g++-4.9
 
     - os: linux
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5']
+          sources: ['ubuntu-toolchain-r-test', 'kalakris-cmake']
+          packages: ['g++-5', 'cmake']
       env: COMPILER=g++-5
 
     - os: linux
       compiler: clang
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5']
-          packages: ['clang-3.5']
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5', 'kalakris-cmake']
+          packages: ['clang-3.5', 'cmake']
       env: COMPILER=clang++-3.5
 
     - os: linux
       compiler: clang
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
-          packages: ['clang-3.6']
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6', 'kalakris-cmake']
+          packages: ['clang-3.6', 'cmake']
       env: COMPILER=clang++-3.6
 
     - os: linux
       compiler: clang
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
-          packages: ['clang-3.7']
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7', 'kalakris-cmake']
+          packages: ['clang-3.7', 'cmake']
       env: COMPILER=clang++-3.7
 
     - os: osx
