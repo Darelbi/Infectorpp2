@@ -166,7 +166,7 @@ function(create_test parm) #tests helper function
 
 	add_dependencies( build_and_test ${ExeName})
 
-	include_directories("include/Infectorpp")
+	target_include_directories( ${ExeName} PUBLIC "include/Infectorpp")
 
 	add_test( ${ExeName} ${ExeName})
 
